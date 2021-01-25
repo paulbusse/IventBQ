@@ -1,0 +1,5 @@
+#!/bin/bash
+
+set -x
+
+glabels-3-batch -i $1 -o $2 $3

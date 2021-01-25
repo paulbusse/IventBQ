@@ -6,7 +6,7 @@
 
 - name: 'APLI A4 3x8'
   labelsperpage: 24
-  labelfile: 'data/labeltypes/apli_a4_3x8.label'
+  labelfile: '../data/labeltypes/apli_a4_3x8.glabels'
 
 - name: 'APLI A4 2x4'
   labelsperpage: 8

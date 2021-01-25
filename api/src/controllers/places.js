@@ -9,6 +9,7 @@ exports.getAll = async function getAll(req, res) {
 
 exports.create = function create(req, res) {
   console.log('POST /places');
+
   db.place.create({
     label: req.body.name,
   })
