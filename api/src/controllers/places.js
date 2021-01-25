@@ -1,16 +1,16 @@
 /* eslint-disable no-console */
-const db = require('../models');
+const Place = require('../models/place');
 
 exports.getAll = async function getAll(req, res) {
   console.log('GET /places');
-  const places = await db.place.findAll();
+  const places = await Place.findAll();
   res.status(200).json(places);
 };
 
 exports.create = function create(req, res) {
   console.log('POST /places');
 
-  db.place.create({
+  Place.create({
     label: req.body.name,
   })
     .then((data) => {
