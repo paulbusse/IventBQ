@@ -10,6 +10,7 @@ const labelFilesController = require('../controllers/labels/files');
 router.get('/types', labelTypeController.getAll);
 
 // Label Files
+router.get('/files/:id', labelFilesController.download);
 router.post('/files', labelFilesController.create);
 
 module.exports = router;

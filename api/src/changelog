@@ -1,0 +1,21 @@
+api/src/database/test.db
+  removed, should never have been there :-)
+api/src/classes/labelfile.js
+  added the 'get path' and getfileabs methods
+api/src/controllers/labels/files.js
+  Added the controller (download) for GET /labels/files/:id
+  Cleanup of create
+api/src/routers/labels.js
+  Added route forGET /labels/files/:id
+data/labeltypes.yaml
+  Added label to the labeltype definition
+docs directory
+  added 4 new files. Started the documentation. We can upload these in the
+  Wiki (or not). 
+
+NEW ISSUES
+----------
+REFACTOR move ../api/src/config ../config
+FEATURE add the file_id to the printed label for easier management
+
+
