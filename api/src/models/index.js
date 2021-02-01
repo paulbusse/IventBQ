@@ -6,7 +6,8 @@ const Label = require('./label');
 
 const env = process.env.NODE_ENV || 'development';
 // eslint-disable-next-line import/no-dynamic-require
-const config = require(`${__dirname}/../config/db.json`)[env];
+const config = require('../../../config/db.json')[env];
+
 const db = {};
 
 config.logging = (msg) => logger.stream.write(msg);

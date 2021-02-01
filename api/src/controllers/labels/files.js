@@ -1,6 +1,6 @@
 const path = require('path');
 const LabelTypes = require('../../classes/labeltypes');
-const unique = require('../../classes/unique');
+const unique = require('../../utils/unique');
 const LabelFile = require('../../classes/labelfile');
 
 exports.download = (req, res) => {

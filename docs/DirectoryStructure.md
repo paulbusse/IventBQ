@@ -5,6 +5,7 @@
 ## Project Root
 
 * `api`: the backend code
+* `config`: the backend code
 * `ui`: the frontend code
 * `data`: the place where the data resides. This can be both data delivered with the product, e.g. the label types, or the sqlite database for the product.
 * `docs`: This documentation
@@ -44,7 +45,6 @@ Classes abstract certain data structures or concepts
 
 * `labelfile.js`: manages the creation of the label files and the directory `~/data/labelfile`
 * `labelfile.js`: manages the label types, defined in `~/data/labeltypes.yaml`
-* `unique.js`: ---NEEDS REFACTORING --- contains the generation of unique identifiers
 
 ## API/src/config
 
@@ -98,3 +98,10 @@ In this directory find utilities that hide configuration interpretations or gene
 Files
 
 * `logger.js`: logging functionality
+* `unique.js`: contains the generation of unique identifiers
+
+## Config
+
+This directory contains configuration files. If config is used by different modules it should be configured only once.
+
+* `db.json`: connection parameters for sequelize
