@@ -1,12 +1,16 @@
 const Sequelize = require('sequelize');
+const logger = require('../utils/logger');
 
 const Place = require('./place');
 const Label = require('./label');
 
 const env = process.env.NODE_ENV || 'development';
 // eslint-disable-next-line import/no-dynamic-require
-const config = require(`${__dirname}/../config/db.json`)[env];
+const config = require('../../../config/db.json')[env];
+
 const db = {};
+
+config.logging = (msg) => logger.stream.write(msg);
 
 let sequelize;
 if (config.use_env_variable) {
