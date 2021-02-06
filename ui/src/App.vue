@@ -29,8 +29,15 @@ export default {
     return {
       messages: [],
       items: [
-        { label: 'Plaatsen', to: '/places' },
-        { label: 'Items', to: '/item' },
+        {
+          label: 'Goederen',
+          key: 'Items',
+          submenu: [
+            { label: 'Overzicht', key: 'ItemView', to: '/itemview' },
+            { label: 'Aanmaken', key: 'ItemAdd', to: '/itemadd' },
+          ],
+        },
+        { label: 'Plaatsen', key: 'Plaatsen', to: '/places' },
       ],
       menuLeft: null,
       maskVisible: false,
@@ -106,7 +113,6 @@ $headerheight: 100px;
   left: 0;
   top: $headerheight;
   border-right:  1px solid white;
-  padding: 10px;
   background-color: var(--surface-a);
 }
 
