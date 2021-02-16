@@ -2,7 +2,6 @@ module.exports = {
   env: {
     browser: true,
     es6: true,
-    node: true,
   },
 
   globals: {
@@ -16,9 +15,7 @@ module.exports = {
     parser: 'babel-eslint',
   },
 
-  plugins: [
-    'vue',
-  ],
+  plugins: ['vue'],
 
   rules: {
     'no-console': process.env.NODE_ENV === 'production' ? 'warn' : 'off',
@@ -27,10 +24,5 @@ module.exports = {
 
   root: true,
 
-  extends: [
-    'plugin:vue/essential',
-    'airbnb-base',
-    'plugin:vue/vue3-essential',
-    '@vue/airbnb',
-  ],
+  extends: ['plugin:vue/essential', 'airbnb-base', 'plugin:vue/vue3-essential', '@vue/airbnb'],
 };

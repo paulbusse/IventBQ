@@ -122,7 +122,7 @@ $headerheight: 100px;
   left: $menuwidth;
   top: $headerheight;
   padding: 10px;
-  width: 100%;
+  width: calc(100% - #{$menuwidth});
   height: 100%;
   background-color: var(--surface-a);
 }
@@ -168,6 +168,7 @@ body {
   }
 
   .i-app-content {
+    width: 100%;
     left: 0;
   }
 
