@@ -16,7 +16,6 @@ import Toast from 'primevue/toast';
 import ToastService from 'primevue/toastservice';
 
 import App from './App.vue';
-
 import router from './router';
 
 import 'primevue/resources/themes/vela-green/theme.css';
@@ -24,9 +23,12 @@ import 'primevue/resources/primevue.min.css';
 import 'primeicons/primeicons.css';
 import 'primeflex/primeflex.css';
 
+import service from './utils/ivts';
+
 axios.defaults.baseURL = 'http://localhost:4000';
 
 const app = createApp(App);
+
 app.use(VueAxios, axios);
 app.use(router);
 app.use(PrimeVue);
@@ -43,4 +45,5 @@ app.component('InputText', InputText);
 app.component('TabMenu', TabMenu);
 app.component('Toast', Toast);
 
+service.app = app;
 app.mount('#app');

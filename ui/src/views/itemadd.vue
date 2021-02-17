@@ -32,7 +32,7 @@
         </div>
         <div class='p-col-2 place'>
           <label for="place">Plaats</label>
-          <Dropdown id='place' v-model="place" :options='places' optionLabel='name'/>
+          <Dropdown id='place' v-model="place" :options='places' optionLabel='label'/>
         </div>
       </div>
       <div class='p-grid'>
@@ -66,10 +66,10 @@
 
 <script>
 import { ref, watch } from 'vue';
+import { useToast } from 'primevue/usetoast';
 import Items from '../classes/items';
 import Places from '../classes/places';
-
-// TODO: edit item
+import notify from '../utils/notify';
 
 export default {
   setup() {
@@ -86,6 +86,8 @@ export default {
     // const tempitems = new Items();
     const items = ref(new Items());
     const places = ref(new Places());
+
+    notify.setToaster(useToast());
 
     if (items.value.length > 0) {
       description.value = items.value[0].description;

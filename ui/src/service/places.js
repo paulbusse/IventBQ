@@ -1,13 +1,15 @@
-function getAllPlaces() {
-  this.axios.get('/places')
+import ivts from '../utils/ivts';
+import notify from '../utils/notify';
+
+function getAllPlaces(places) {
+  ivts.get('/places')
     .then((res) => {
-      this.places = res.data;
+      places.load(res.data);
     })
     .catch(() => {
-      this.$toast.add({
-        severity: 'error',
+      notify.error({
         summary: 'Server fout',
-        details: 'Het ophalen van de plaatsen is mislukt!',
+        detail: 'Het ophalen van de plaatsen is mislukt!',
       });
     });
 }

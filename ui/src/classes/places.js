@@ -1,9 +1,15 @@
+import svcPlaces from '../service/places';
+
 export default class Places extends Array {
   constructor() {
     super();
-    super.push(
-      { id: 1, name: 'diepvries' },
-      { id: 2, name: 'wijnrek' },
-    );
+    svcPlaces.getAllPlaces(this);
+    this.push({ id: 0, label: 'loading...' });
+  }
+
+  load(data) {
+    this.length = 0;
+    data.forEach((el) => this.push(el));
+    console.log(this);
   }
 }
