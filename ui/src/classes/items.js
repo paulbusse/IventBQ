@@ -1,13 +1,15 @@
 import _ from 'lodash';
 
 import { simpleRun } from '../utils/unique';
+// eslint-disable-next-line no-unused-vars
+import nLabels from './labels';
 
-const ids = _.range(1, 100);
+const labels = _.range(1, 100);
 
 export default class Items extends Array {
   add(item) {
     const newItem = item;
-    newItem.ids = [...ids.splice(0, item.count)];
+    newItem.labels = [...labels.splice(0, item.count)];
     newItem.key = simpleRun();
     newItem.class = 'create';
 
@@ -25,9 +27,9 @@ export default class Items extends Array {
     const diff = item.count - values.count;
     console.log('set', diff);
     if (diff > 0) {
-      item.ids.splice(item.ids.length - diff, item.ids.length);
+      item.labels.splice(item.labels.length - diff, item.labels.length);
     } else if (diff < 0) {
-      item.ids.push(...ids.splice(0, -diff));
+      item.labels.push(...labels.splice(0, -diff));
     }
     item.count = values.count;
     console.log('set', item);
@@ -40,7 +42,11 @@ export default class Items extends Array {
     // TODO Delete in case of other classes
     if (item.class === 'create') {
       this.splice(index, 1);
-      ids.splice(0, 0, ...item.ids);
+      labels.splice(0, 0, ...item.labels);
     }
+  }
+
+  backendSync() {
+    console.log('backendSync', this);
   }
 }

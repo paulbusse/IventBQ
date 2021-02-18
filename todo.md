@@ -2,24 +2,28 @@
 
 ## Add item screen
 
-### views/itemadd
+### Bugs
 
-- [x] add [x] to inputtext, to clear inputtext
-  - [x] the focus after pressing the x should be on the field again
-- [x] replace 'plaats' with dropdown
-- [x] implement [Save] when in edit mode
-- [x] remove pencil icon in itemlist
-- [x] [Save] on the list
-  - [x] Button disappears when saved
-  - [x] Button disappears when voeg toe is clicked
-- [x] implement select item from itemlist
+- [x] notify toast does not have a timer
+- [x] itemlist no longer contains the location
+- [x] Refactor: Rename ids to labels
 
-### Load places from DB
+### manage labels
 
-- [x] utils/ivts: Create a util for axios
-- [x] utils/ivts: that feeds back to the toast
-- [x] classes/places: load from DB
-- [x] service/places:GET /places
+- [ ] preload and lock labels in the DB.
+  - [ ] POST /labels
+- [ ] labels low/high watermark
+
+### load new items in DB
+
+- [x] itemadd: add button to save
+- [ ] lock labels in the DB
+- [ ] places class: transform items to records
+- [ ] places service: post items to ivts
+- [ ] api routes: add new routs
+- [ ] api controller add controller
+- [ ] api classes add items class
+- [ ] api model add items model
 
 ### more stuff for this screen
 
@@ -30,9 +34,6 @@
 
 ### classes/items
 
-- [ ] labels low/high watermark
-- [ ] POST /labels
-- [ ] Refactor: Rename ids to labels
 - [x] Rename label to description ()
 - [x] update an items
 
@@ -40,6 +41,12 @@
   - [x] when the count < previous count
 - [ ] Save to DB
 - [ ] Load from DB
+
+### settings
+
+- [ ] Operational
+  - [ ] nr of labels in backlog
+    - [ ] max number of items declared in one go.
 
 ## Before release
 
@@ -55,6 +62,7 @@
 - [ ] clean code
   - [ ] remove console.log
   - [ ] remove unused Primevue components
+  - [ ] look for eslint-disable
 - [ ] build procedure
 - [ ] install procedure
 - [ ] install documatation

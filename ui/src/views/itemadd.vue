@@ -1,67 +1,77 @@
 <template>
-  <Card class="iic-view">
-    <template #title>
-      <h1>Goederen toevoegen</h1>
-    </template>
+  <div>
+    <Card class="iic-view">
+      <template #title>
+        <h1>Goederen toevoegen</h1>
+      </template>
 
-    <template #content>
-      <div class='p-grid'>
-        <div class='p-col-4 description'>
-          <div class='p-input-icon-right'>
-            <label for="description">Omschrijving</label>
-            <i class='pi pi-times' @click="emptyDescription"/>
-            <InputText ref='trDescription' id='description' type="text" v-model="description"/>
-            <small class="p-invalid" id="placename-help">{{descriptionerr}}&nbsp;</small>
+      <template #content>
+        <div class='p-grid'>
+          <div class='p-col-4 description'>
+            <div class='p-input-icon-right'>
+              <label for="description">Omschrijving</label>
+              <i class='pi pi-times' @click="emptyDescription"/>
+              <InputText ref='trDescription' id='description' type="text" v-model="description"/>
+              <small class="p-invalid" id="placename-help">{{descriptionerr}}&nbsp;</small>
+            </div>
+          </div>
+          <div class='p-col-4 quantity'>
+            <div class='p-input-icon-right'>
+              <label for="quantity">Hoeveelheid</label>
+              <i class='pi pi-times' @click='emptyQuantity'/>
+              <InputText ref='trQuantity' id='quantity' type="text" v-model="quantity"/>
+              <small class="p-invalid" id="placename-help">&nbsp;</small>
+            </div>
+          </div>
+          <div class='p-col-2 count'>
+            <label for="count">Aantal</label>
+            <InputNumber id='count'
+              showButtons buttonLayout="horizontal"
+              incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+              decrementButtonClass="p-button-outlined" incrementButtonClass="p-button-outlined"
+              :min='1' v-model="count"/>
+          </div>
+          <div class='p-col-2 place'>
+            <label for="place">Plaats</label>
+            <Dropdown id='place' v-model="place" :options='places' optionLabel='label'/>
           </div>
         </div>
-        <div class='p-col-4 quantity'>
-          <div class='p-input-icon-right'>
-            <label for="quantity">Hoeveelheid</label>
-            <i class='pi pi-times' @click='emptyQuantity'/>
-            <InputText ref='trQuantity' id='quantity' type="text" v-model="quantity"/>
-            <small class="p-invalid" id="placename-help">&nbsp;</small>
+        <div class='p-grid'>
+          <div class='p-col-12'>
+            <Button label="Voeg toe" icon="pi pi-plus" @click="addItem"
+            class='p-button-outlined' autofocus />&nbsp;
+            <Button label='Wijzig' icon="pi pi-save" @click="saveItem"
+              class='p-button-outlined' :disabled='selected.length === 0' autofocus/>
           </div>
         </div>
-        <div class='p-col-2 count'>
-          <label for="count">Aantal</label>
-          <InputNumber id='count'
-            showButtons buttonLayout="horizontal"
-            incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-            decrementButtonClass="p-button-outlined" incrementButtonClass="p-button-outlined"
-            :min='1' v-model="count"/>
-        </div>
-        <div class='p-col-2 place'>
-          <label for="place">Plaats</label>
-          <Dropdown id='place' v-model="place" :options='places' optionLabel='label'/>
-        </div>
-      </div>
-      <div class='p-grid'>
-        <div class='p-col-12'>
-          <Button label="Voeg toe" icon="pi pi-plus" @click="addItem"
-          class='p-button-outlined' autofocus />&nbsp;
-          <Button label='Wijzig' icon="pi pi-save" @click="saveItem"
-            class='p-button-outlined' :disabled='selected.length === 0' autofocus/>
-        </div>
-      </div>
-      <hr>
-
-      <ul class='itemlist'>
-        <li v-for="item in items" class='item' :class="{selected : selected == item.key}"
-         :key='item.key'>
-          <Button icon="pi pi-times" @click="deleteItem(item.key)"
-            class='p-button-rounded p-button-text p-button-sm' autofocus />
-          <span class="editable" @click="itemClick(item)" :class="getLIClass(item)">
-            {{item.count}} {{item.description}}
-            <span v-if="item.quantity">- {{item.quantity}}</span>
-            <span v-if="item.place.name"> @ {{item.place.name}}</span>
-            : {{item.ids.join(', ')}}
-          </span>
-        </li>
-      </ul>
-      <p>{{selected}}</p>
-      <hr>
-    </template>
-  </Card>
+        <hr>
+      </template>
+    </Card>
+    <Card class='itemlist'>
+      <template #title>
+        <h1>Laatst toegevoegde goederen</h1>
+        <br>
+        <Button label='Bewaar' icon="pi pi-save" @click="saveList"
+              class='p-button-outlined' :disabled='edited == 0' autofocus/>
+      </template>
+      <template #content>
+        <ul>
+          <li v-for="item in items" class='item'
+           :class="{selected : selected == item.key}"
+          :key='item.key'>
+            <span class="icon" @click="deleteItem(item.key)">&#xe90b;</span>
+            <span class="editable" @click="itemClick(item)" :class="getLIClass(item)">
+              {{item.count}} {{item.description}}
+              <span v-if="item.quantity">- {{item.quantity}}</span>
+              <span v-if="item.place.label"> @ {{item.place.label}}</span>
+              : {{item.labels.join(', ')}}
+            </span>
+          </li>
+        </ul>
+        <hr>
+      </template>
+    </Card>
+  </div>
 </template>
 
 <script>
@@ -79,6 +89,7 @@ export default {
     const place = ref('');
     const count = ref(1);
     const selected = ref('');
+    const edited = ref(0);
 
     const trDescription = ref(null);
     const trQuantity = ref(null);
@@ -111,10 +122,12 @@ export default {
       });
 
       selected.value = '';
+      edited.value = 1;
     }
 
     function deleteItem(key) {
       items.value.delete(key);
+      edited.value = 1;
     }
 
     function itemClick(item) {
@@ -135,6 +148,7 @@ export default {
       });
 
       selected.value = '';
+      edited.value = 1;
     }
 
     function getLIClass(item) {
@@ -151,6 +165,10 @@ export default {
     function emptyQuantity() {
       quantity.value = '';
       trQuantity.value.$el.focus();
+    }
+
+    function saveList() {
+      items.value.backendSync();
     }
 
     return {
@@ -170,11 +188,13 @@ export default {
       addItem,
       deleteItem,
       saveItem,
+      saveList,
 
       // Item list
       itemClick,
       selected,
       getLIClass,
+      edited,
 
       // Places
       places,
@@ -185,6 +205,14 @@ export default {
 </script>
 
 <style lang="scss">
+.p-card-title {
+    h1 {
+      font-size: 1.5rem;
+      text-align:left;
+      margin-top: 0;
+      margin-bottom: 0%;
+    }
+  }
 
 .iic-view {
   .header {
@@ -192,13 +220,6 @@ export default {
     border-bottom: 1px solid var(--text-color);
     font-weight: bold;
     text-align: center;
-  }
-
-  .p-card-title {
-    h1 {
-      font-size: 1.5rem;
-      text-align:left
-    }
   }
 
   .description {
@@ -243,37 +264,61 @@ export default {
       width: 100%;
     }
   }
+}
 
-  .itemlist {
-    padding-left: 0;
-
-    li {
-        list-style-type: none; /* Remove bullets */
-        padding: 0; /* Remove padding */
-        margin: 0; /* Remove margins */
-
-        .p-button {
-          padding: 0;
-          height: 1.5rem;
-          width:1.5rem;
-        }
-
-        .create {
-          font-style: italic;
-        }
-
-        .editable:hover {
-          text-decoration: underline solid var(--primary-color);
-          cursor: pointer;
-        }
-
-        .selected {
-          font-weight: bold;
-          color:var(--primary-color);
-        }
-    }
+.itemlist {
+  .p-card-body {
+    padding-top: 0;
   }
 
+  ul {
+    padding-left: 0;
+    margin-top: 0;
+  }
+
+  li.item {
+    list-style-type: none; /* Remove bullets */
+    margin-bottom: 5px;
+    padding {
+      top: 20px;
+      bottom: 3px;
+    }; /* Remove margins */
+
+    .icon {
+      font-family: 'primeicons';
+      margin-right: 1em;
+      color: var(--primary-color);
+    }
+
+    .icon:hover {
+      cursor: pointer;
+    }
+
+    .p-card-content {
+      padding: 0;
+    }
+
+    .p-button {
+      padding: 0;
+      height: 1.5rem;
+      width:1.5rem;
+      margin-bottom: 0;
+    }
+
+    .create {
+      font-style: italic;
+    }
+
+    .editable:hover {
+      text-decoration: underline solid var(--primary-color);
+      cursor: pointer;
+    }
+
+    .selected {
+      font-weight: bold;
+      color:var(--primary-color);
+    }
+  }
 }
 
 </style>
