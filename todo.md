@@ -4,9 +4,15 @@
 
 ### Bugs
 
-- [x] notify toast does not have a timer
-- [x] itemlist no longer contains the location
-- [x] Refactor: Rename ids to labels
+NO BUGS AT THE MOMENT
+
+### Use db migration instead of sync
+
+- [x] create migrations for labels
+- [x] create migration for places
+- [x] remove sync from db.
+- [x] validate the db is in line with the code
+- [x] test if all place API calls still work.
 
 ### manage labels
 

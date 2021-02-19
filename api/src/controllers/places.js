@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-const Place = require('../models/place');
+const Place = require('../models/places');
 
 exports.getAll = async function getAll(req, res) {
   console.log('GET /places');
