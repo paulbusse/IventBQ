@@ -1,85 +1,87 @@
 <template>
   <div>
-    <Card class="iic-view">
-      <template #title>
-        <h1>Goederen toevoegen</h1>
-      </template>
+    <h1>Goederen toevoegen</h1>
+    <div class='p-grid itemadd'>
+      <div class='p-col-4 field'>
+        <label for="idDescription">Omschrijving</label>
+        <span class="p-input-icon-right">
+          <i class="pi pi-times clickable" @click='emptyDescription'/>
+          <InputText
+           id="idDescription"
+           v-model="description"
+           type="text"
+           aria-describedby="description-help"
+           ref='refDescription'
+          />
+        </span>
+        <small id="description-help" class="p-error">{{descriptionerr}}&nbsp;</small>
+      </div>
+      <div class='p-col-4 field'>
+        <label for="idQuantity">Hoeveelheid</label>
+        <span class="p-input-icon-right">
+          <i class="pi pi-times clickable" @click='emptyQuantity'/>
+          <InputText
+           id="idQuantity"
+           v-model="quantity"
+           type="text"
+           aria-describedby="quantity-help"
+           ref='refQuantity'
+          />
+        </span>
+        <small id="quantity-help" class="p-error">&nbsp;</small>
+      </div>
+      <div class='p-col-2 number'>
+        <label for="idCount">Aantal</label>
+        <InputNumber id='idCount'
+          showButtons buttonLayout="horizontal"
+          incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+          decrementButtonClass="p-button-outlined" incrementButtonClass="p-button-outlined"
+          :min='1' v-model="count" aria-describedby="count-help"/>
+        <small id="count-help" class="p-error">&nbsp;</small>
+      </div>
+      <div class='p-col-2 place'>
+        <label for="place">Plaats</label>
+        <Dropdown id='place' v-model="place" :options='places.places' optionLabel='label'/>
+      </div>
 
-      <template #content>
-        <div class='p-grid'>
-          <div class='p-col-4 description'>
-            <div class='p-input-icon-right'>
-              <label for="description">Omschrijving</label>
-              <i class='pi pi-times' @click="emptyDescription"/>
-              <InputText ref='trDescription' id='description' type="text" v-model="description"/>
-              <small class="p-invalid" id="placename-help">{{descriptionerr}}&nbsp;</small>
-            </div>
-          </div>
-          <div class='p-col-4 quantity'>
-            <div class='p-input-icon-right'>
-              <label for="quantity">Hoeveelheid</label>
-              <i class='pi pi-times' @click='emptyQuantity'/>
-              <InputText ref='trQuantity' id='quantity' type="text" v-model="quantity"/>
-              <small class="p-invalid" id="placename-help">&nbsp;</small>
-            </div>
-          </div>
-          <div class='p-col-2 count'>
-            <label for="count">Aantal</label>
-            <InputNumber id='count'
-              showButtons buttonLayout="horizontal"
-              incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
-              decrementButtonClass="p-button-outlined" incrementButtonClass="p-button-outlined"
-              :min='1' v-model="count"/>
-          </div>
-          <div class='p-col-2 place'>
-            <label for="place">Plaats</label>
-            <Dropdown id='place' v-model="place" :options='places' optionLabel='label'/>
-          </div>
+      <div class='p-grid'>
+        <div class='p-col-12 buttons'>
+          <Button label="Voeg toe" icon="pi pi-plus" @click="addItem"
+          class='p-button-outlined' :disabled='description.length === 0' autofocus />&nbsp;
+          <Button label='Wijzig' icon="pi pi-save" @click="saveItem"
+            class='p-button-outlined' :disabled='selected.length === 0' autofocus/>
         </div>
-        <div class='p-grid'>
-          <div class='p-col-12'>
-            <Button label="Voeg toe" icon="pi pi-plus" @click="addItem"
-            class='p-button-outlined' autofocus />&nbsp;
-            <Button label='Wijzig' icon="pi pi-save" @click="saveItem"
-              class='p-button-outlined' :disabled='selected.length === 0' autofocus/>
-          </div>
-        </div>
-        <hr>
-      </template>
-    </Card>
-    <Card class='itemlist'>
-      <template #title>
-        <h1>Laatst toegevoegde goederen</h1>
-        <br>
-        <Button label='Bewaar' icon="pi pi-save" @click="saveList"
-              class='p-button-outlined' :disabled='edited == 0' autofocus/>
-      </template>
-      <template #content>
-        <ul>
-          <li v-for="item in items" class='item'
-           :class="{selected : selected == item.key}"
-          :key='item.key'>
-            <span class="icon" @click="deleteItem(item.key)">&#xe90b;</span>
-            <span class="editable" @click="itemClick(item)" :class="getLIClass(item)">
-              {{item.count}} {{item.description}}
-              <span v-if="item.quantity">- {{item.quantity}}</span>
-              <span v-if="item.place.label"> @ {{item.place.label}}</span>
-              : {{item.labels.join(', ')}}
-            </span>
-          </li>
-        </ul>
-        <hr>
-      </template>
-    </Card>
+      </div>
+    </div>
+
+    <hr>
+    <h1>Laatst toegevoegde goederen</h1>
+    <div class='itemlist'>
+      <Button label='Bewaar' icon="pi pi-save" @click="saveList"
+            class='p-button-outlined' :disabled='edited == 0' autofocus/>
+      <ul ref='refList' :style='{"max-height": listHeight}'>
+        <li v-for="item in items" class='item'
+          :class="{selected : selected == item.key}"
+        :key='item.key'>
+          <span class="icon" @click="deleteItem(item.key)">&#xe90b;</span>
+          <span class="editable" @click="itemClick(item)" :class="getLIClass(item)">
+            {{item.count}} {{item.description}}
+            <span v-if="item.quantity">- {{item.quantity}}</span>
+            <span v-if="item.place.label"> @ {{item.place.label}}</span>
+            : {{item.labels.join(', ')}}
+          </span>
+        </li>
+      </ul>
+    </div>
   </div>
 </template>
 
 <script>
-import { ref, watch } from 'vue';
-import { useToast } from 'primevue/usetoast';
-import Items from '../classes/items';
-import Places from '../classes/places';
-import notify from '../utils/notify';
+import {
+  ref, reactive, watch, onMounted,
+} from 'vue';
+import state from '../utils/state';
+import svcPlaces from '../service/places';
 
 export default {
   setup() {
@@ -89,27 +91,42 @@ export default {
     const place = ref('');
     const count = ref(1);
     const selected = ref('');
-    const edited = ref(0);
+    const edited = ref(state.modifiedCreateItems);
 
-    const trDescription = ref(null);
-    const trQuantity = ref(null);
+    const refDescription = ref(null);
+    const refQuantity = ref(null);
+    const refList = ref([]);
+    const listHeight = ref('calc(100vh - 500px)');
 
     // const tempitems = new Items();
-    const items = ref(new Items());
-    const places = ref(new Places());
+    const items = ref(state.createItems);
+    const places = reactive(state.places);
 
-    notify.setToaster(useToast());
-
-    if (items.value.length > 0) {
-      description.value = items.value[0].description;
-      quantity.value = items.value[0].quantity;
-    }
+    onMounted(() => {
+      let { top } = refList.value.getBoundingClientRect();
+      top += 8; // add a margin to the viewport
+      listHeight.value = `calc(100vh - ${top}px)`;
+    });
 
     watch(description,
       (cur) => {
+        console.log('watch description', cur);
         if (cur.length === 0) descriptionerr.value = 'Omschrijving mag niet leeg zijn.';
         else descriptionerr.value = '';
       });
+
+    if (places.length === 0) {
+      const np = [];
+      svcPlaces.getAllPlaces(np);
+      places.set(np);
+    }
+
+    if (items.value.length > 0) {
+      console.log(items.value[0]);
+      description.value = items.value[0].description;
+      quantity.value = items.value[0].quantity;
+      place.value = items.value[0].place;
+    }
 
     function addItem() {
       if (descriptionerr.value.length !== 0) return;
@@ -137,9 +154,11 @@ export default {
       quantity.value = item.quantity;
       count.value = item.count;
       place.value = item.place;
+      console.log(item);
     }
 
     function saveItem() {
+      console.log(place.value);
       items.value.set(selected.value, {
         description: description.value,
         quantity: quantity.value,
@@ -158,13 +177,15 @@ export default {
     }
 
     function emptyDescription() {
+      console.log('emptyDescription');
       description.value = '';
-      trDescription.value.$el.focus();
+      refDescription.value.$el.focus();
     }
 
     function emptyQuantity() {
+      console.log('emptyQuantity');
       quantity.value = '';
-      trQuantity.value.$el.focus();
+      refQuantity.value.$el.focus();
     }
 
     function saveList() {
@@ -178,8 +199,6 @@ export default {
       quantity,
       place,
       count,
-      trDescription,
-      trQuantity,
       emptyDescription,
       emptyQuantity,
 
@@ -193,11 +212,17 @@ export default {
       // Item list
       itemClick,
       selected,
-      getLIClass,
       edited,
 
       // Places
       places,
+
+      // Layout
+      listHeight,
+      refList,
+      refDescription,
+      refQuantity,
+      getLIClass,
     };
   },
 };
@@ -205,56 +230,33 @@ export default {
 </script>
 
 <style lang="scss">
-.p-card-title {
-    h1 {
-      font-size: 1.5rem;
-      text-align:left;
-      margin-top: 0;
-      margin-bottom: 0%;
-    }
-  }
+h1 {
+  font-size: 1.5rem;
+  text-align:left;
+  margin-top: 0;
+  margin-bottom: 16px;
+}
 
-.iic-view {
-  .header {
-    box-sizing: border-box;
-    border-bottom: 1px solid var(--text-color);
-    font-weight: bold;
-    text-align: center;
-  }
-
-  .description {
-    .p-input-icon-right {
-      width:100%;
-
-      i:hover {
-        cursor: pointer;
-      }
-    }
+.itemadd {
+  .field * {
+      display: block;
 
     .p-inputtext {
       width: 100%;
     }
   }
 
-  .quantity {
-    .p-input-icon-right {
-      width:100%;
+  .clickable:hover {
+    cursor: pointer;
+  }
 
-      i:hover {
-        cursor: pointer;
-      }
-    }
-
-    .p-inputtext {
+  .number {
+    display: block;
+    .p-inputnumber {
       width: 100%;
     }
-  }
-  .count {
-    .p-inputtext {
-      width: 40%;
-    }
-
     .p-inputnumber-input {
+      width: calc(100% - 75px);
       text-align: right;
     }
   }
@@ -264,16 +266,18 @@ export default {
       width: 100%;
     }
   }
+
+  .buttons {
+    margin-left: 8px;
+  }
 }
 
 .itemlist {
-  .p-card-body {
-    padding-top: 0;
-  }
-
   ul {
+    box-sizing: border-box;
+    overflow-y: scroll;
     padding-left: 0;
-    margin-top: 0;
+    margin-top: 8px;
   }
 
   li.item {
@@ -282,7 +286,7 @@ export default {
     padding {
       top: 20px;
       bottom: 3px;
-    }; /* Remove margins */
+    };
 
     .icon {
       font-family: 'primeicons';
@@ -292,10 +296,6 @@ export default {
 
     .icon:hover {
       cursor: pointer;
-    }
-
-    .p-card-content {
-      padding: 0;
     }
 
     .p-button {

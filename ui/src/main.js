@@ -15,8 +15,9 @@ import TabMenu from 'primevue/tabmenu';
 import Toast from 'primevue/toast';
 import ToastService from 'primevue/toastservice';
 
-import App from './App.vue';
+import App from './App';
 import router from './router';
+// import store from './store';
 
 import 'primevue/resources/themes/vela-green/theme.css';
 import 'primevue/resources/primevue.min.css';
@@ -31,6 +32,7 @@ const app = createApp(App);
 
 app.use(VueAxios, axios);
 app.use(router);
+// app.use(store);
 app.use(PrimeVue);
 app.use(ToastService);
 

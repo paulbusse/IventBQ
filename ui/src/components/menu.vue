@@ -39,6 +39,7 @@ export default {
   .ivt-submenu {
     font-weight: bold;
     padding-bottom: 0;
+    padding-top: 10px;
   }
 
   .ivt-submenu-items {

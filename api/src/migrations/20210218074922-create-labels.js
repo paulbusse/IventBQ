@@ -13,6 +13,9 @@ module.exports = {
         defaultValue: 'Locked',
         allowNull: false,
       },
+      locker: {
+        type: Sequelize.STRING,
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

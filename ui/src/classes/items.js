@@ -1,15 +1,16 @@
-import _ from 'lodash';
-
 import { simpleRun } from '../utils/unique';
-// eslint-disable-next-line no-unused-vars
-import nLabels from './labels';
-
-const labels = _.range(1, 100);
 
 export default class Items extends Array {
+  constructor(labels) {
+    super();
+    this.labels = labels;
+    console.log(this);
+  }
+
   add(item) {
+    console.log(this);
     const newItem = item;
-    newItem.labels = [...labels.splice(0, item.count)];
+    newItem.labels = [...this.labels.takeOff(item.count)];
     newItem.key = simpleRun();
     newItem.class = 'create';
 
@@ -19,6 +20,7 @@ export default class Items extends Array {
   set(key, values) {
     const index = this.findIndex((item) => item.key === key);
     const item = this[index];
+    console.log('set', item, key, values);
 
     item.description = values.description;
     item.quantity = values.quantity;
@@ -29,10 +31,12 @@ export default class Items extends Array {
     if (diff > 0) {
       item.labels.splice(item.labels.length - diff, item.labels.length);
     } else if (diff < 0) {
-      item.labels.push(...labels.splice(0, -diff));
+      // item.labels.push(...this.labels.tafeOff(-diff));
+      const nl = this.labels.takeOff(-diff);
+      console.log(nl);
+      item.labels.push(...nl);
     }
     item.count = values.count;
-    console.log('set', item);
   }
 
   delete(key) {
@@ -42,7 +46,6 @@ export default class Items extends Array {
     // TODO Delete in case of other classes
     if (item.class === 'create') {
       this.splice(index, 1);
-      labels.splice(0, 0, ...item.labels);
     }
   }
 

@@ -18,7 +18,8 @@
 </template>
 
 <script>
-import IvtMenu from './components/menu.vue';
+import event from './utils/event';
+import IvtMenu from './components/menu';
 
 export default {
   components: {
@@ -37,7 +38,14 @@ export default {
             { label: 'Aanmaken', key: 'ItemAdd', to: '/itemadd' },
           ],
         },
-        { label: 'Plaatsen', key: 'Plaatsen', to: '/places' },
+        {
+          label: 'Plaatsen',
+          key: 'Plaatsen',
+          submenu: [
+            { label: 'Overzicht', key: 'PlaceView', to: '/places' },
+            { label: 'Aanmaken', key: 'PlaceAdd', to: '/placeadd' },
+          ],
+        },
       ],
       menuLeft: null,
       maskVisible: false,
@@ -70,8 +78,9 @@ export default {
   mounted() {
     const el = document.querySelector('.i-app-menu');
     const style = getComputedStyle(el);
-    // eslint-disable-next-line no-console
     if (style.left !== '0px') this.menuLeft = `-${style.width}`;
+
+    event.on('toast', (e) => { this.$toast.add(e); });
   },
 
   watch: {
@@ -147,6 +156,10 @@ $headerheight: 100px;
   padding: 0;
   height: 100%;
   width: 100%;
+}
+
+html {
+  height: 100%;
 }
 
 body {

@@ -1,31 +1,38 @@
 # Things to do
 
-## Add item screen
+## Current
 
 ### Bugs
 
-NO BUGS AT THE MOMENT
+- [x] When creating a new place the toast shows an (undefined)
+- [x] I can add an item with an empty description
+- [x] the labels are reloaded every time when voegtoe is pressed.
+- [x] Support for CORS
+- [x] When leaving the add items page and returning later, we loose all information
+  - [x] lock labels
+  - [x] already entered information
+  - [x] The 'place' is not completed correctly
+- [x] 'Bewaar' fails
+- [x] Newly created places do not show up in dropdown in itemadd
+- [x] Cards are not scrolling - must be removed
+- [x] Created items list does not scroll
 
-### Use db migration instead of sync
+### Refactor
 
-- [x] create migrations for labels
-- [x] create migration for places
-- [x] remove sync from db.
-- [x] validate the db is in line with the code
-- [x] test if all place API calls still work.
+- [x] ui classes places should not be derived from Array
+- [x] places.vue -> composition api
 
 ### manage labels
 
-- [ ] preload and lock labels in the DB.
-  - [ ] POST /labels
-- [ ] labels low/high watermark
+- [x] preload and lock labels in the DB.
+  - [x] PUT /labels
+- [x] labels low/high watermark
 
 ### load new items in DB
 
 - [x] itemadd: add button to save
-- [ ] lock labels in the DB
+- [x] lock labels in the DB
 - [ ] places class: transform items to records
-- [ ] places service: post items to ivts
 - [ ] api routes: add new routs
 - [ ] api controller add controller
 - [ ] api classes add items class
@@ -48,11 +55,52 @@ NO BUGS AT THE MOMENT
 - [ ] Save to DB
 - [ ] Load from DB
 
-### settings
+## Merge
+
+### Use db migration instead of sync
+
+- [x] create migrations for labels
+- [x] create migration for places
+- [x] remove sync from db.
+- [x] validate the db is in line with the code
+- [x] test if all place API calls still work.
+
+### views/itemadd
+
+- [x] add [x] to inputtext, to clear inputtext
+  - [x] the focus after pressing the x should be on the field again
+- [x] replace 'plaats' with dropdown
+- [x] implement [Save] when in edit mode
+- [x] remove pencil icon in itemlist
+- [x] [Save] on the list
+  - [x] Button disappears when saved
+  - [x] Button disappears when voeg toe is clicked
+- [x] implement select item from itemlist
+
+### Load places from DB
+
+- [x] utils/ivts: Create a util for axios
+- [x] utils/ivts: that feeds back to the toast
+- [x] classes/places: load from DB
+- [x] service/places:GET /places
+
+## settings
 
 - [ ] Operational
   - [ ] nr of labels in backlog
     - [ ] max number of items declared in one go.
+  - [ ] nr of days to break a lock
+  - [ ] nr of days to reuse a deleted label
+
+## More fixes
+
+### More bugs
+
+- [ ] When entering itemadd, focus should be on description field
+
+### More Refactoring
+
+- [ ] move generic css to core.css
 
 ## Before release
 
@@ -100,3 +148,7 @@ Wine:
 Book:
 
 - Author
+
+### CORS handling
+
+CORS handling needs to be refined so that we handle it correctly. Currently all CORS requests are accepted.

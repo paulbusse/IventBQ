@@ -10,14 +10,23 @@ exports.getAll = async function getAll(req, res) {
 exports.create = function create(req, res) {
   console.log('POST /places');
 
-  Place.create({
-    label: req.body.name,
-  })
-    .then((data) => {
-      res.status(201).json({
-        label: data.label,
-        id: data.null,
-      });
+  const label = req.body.name;
+  Place.create({ label })
+    .then(() => {
+      Place.findOne({ where: { label } })
+        .then((data) => res.status(201).json(data))
+        .catch((error) => {
+          const noterr = error.errors[0];
+          const err = {
+            code: 'C_P_2',
+            message: noterr.message,
+            path: noterr.path,
+            value: noterr.value,
+          };
+
+          console.log(err);
+          res.status(400).json(err);
+        });
     })
     .catch((error) => {
       const noterr = error.errors[0];

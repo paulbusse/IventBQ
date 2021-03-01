@@ -1,15 +1,23 @@
 import svcPlaces from '../service/places';
 
-export default class Places extends Array {
+export default class Places {
   constructor() {
-    super();
-    svcPlaces.getAllPlaces(this);
-    this.push({ id: 0, label: 'loading...' });
+    this.places = [];
   }
 
-  load(data) {
-    this.length = 0;
-    data.forEach((el) => this.push(el));
-    console.log(this);
+  get length() {
+    return this.places.length;
+  }
+
+  add(place) {
+    this.places.push(place);
+  }
+
+  reload() {
+    return svcPlaces.getAllPlaces(this.places);
+  }
+
+  set(places) {
+    this.places = places;
   }
 }

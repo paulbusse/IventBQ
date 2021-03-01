@@ -9,6 +9,9 @@ class Label extends Model {
         defaultValue: 'Locked',
         allowNull: false,
       },
+      locker: {
+        type: DataTypes.STRING,
+      },
     }, {
       sequelize,
       modelName: 'Labels',

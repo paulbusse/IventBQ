@@ -1,21 +1,22 @@
-// import ivts from '../utils/ivts';
-// import notify from '../utils/notify';
+import ivts from '../utils/ivts';
+import notify from '../utils/notify';
 
 function lockLabels(count, arr) {
-  console.log('lockLabels', count, arr);
-/*  ivts.post('/labels')
+  ivts.put('/labels', { count })
     .then((res) => {
-      console.log(res);
-      arr.push(...res.data.labels);
-      places.load(res.data);
-    })
-    .catch(() => {
+      arr.push(...res.data);
+      console.log('LockLables', arr);
+    }).catch((err) => {
+      let detail = err.message;
+      if (err.response) {
+        const d = err.response.data;
+        detail = `${d.message}. (${d.path}: ${d.value}).`;
+      }
       notify.error({
-        summary: 'Server fout',
-        detail: 'Het ophalen van de plaatsen is mislukt!',
+        summary: 'Aanmaken van nieuw plaats is mislukt',
+        detail,
       });
     });
-*/
 }
 
 export default {
