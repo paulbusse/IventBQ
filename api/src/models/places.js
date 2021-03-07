@@ -1,6 +1,6 @@
 const { DataTypes, Model } = require('sequelize');
 
-class Places extends Model {
+class Place extends Model {
   static init(sequelize) {
     super.init({
       label: {
@@ -16,8 +16,12 @@ class Places extends Model {
       sequelize,
       modelName: 'Places',
     });
-    return Places;
+    return Place;
+  }
+
+  static associate(models) {
+    Place.hasMany(models.Item);
   }
 }
 
-module.exports = Places;
+module.exports = Place;

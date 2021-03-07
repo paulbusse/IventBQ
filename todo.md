@@ -4,39 +4,29 @@
 
 ### Bugs
 
-- [x] When creating a new place the toast shows an (undefined)
-- [x] I can add an item with an empty description
-- [x] the labels are reloaded every time when voegtoe is pressed.
-- [x] Support for CORS
-- [x] When leaving the add items page and returning later, we loose all information
-  - [x] lock labels
-  - [x] already entered information
-  - [x] The 'place' is not completed correctly
-- [x] 'Bewaar' fails
-- [x] Newly created places do not show up in dropdown in itemadd
-- [x] Cards are not scrolling - must be removed
-- [x] Created items list does not scroll
+N/A
 
 ### Refactor
 
-- [x] ui classes places should not be derived from Array
-- [x] places.vue -> composition api
+N/A
 
-### manage labels
+### Save new UI items in DB
 
-- [x] preload and lock labels in the DB.
-  - [x] PUT /labels
-- [x] labels low/high watermark
+- [x] transform the created items to DB structures
+  - [x] TC 1: single element, count = 1
+  - [x] TC 2: single element, count > 1
+  - [x] TC 3: multiple elements
+- [x] POST new items to DB
+- [x] Added migrations script for items table
 
 ### load new items in DB
 
 - [x] itemadd: add button to save
 - [x] lock labels in the DB
-- [ ] places class: transform items to records
-- [ ] api routes: add new routs
-- [ ] api controller add controller
-- [ ] api classes add items class
-- [ ] api model add items model
+- [x] places class: transform items to records
+- [x] api routes: add new routs
+- [x] api controller add controller
+- [x] api model add items model
 
 ### more stuff for this screen
 
@@ -49,7 +39,6 @@
 
 - [x] Rename label to description ()
 - [x] update an items
-
   - [x] when the count > previous count
   - [x] when the count < previous count
 - [ ] Save to DB
@@ -84,6 +73,17 @@
 - [x] classes/places: load from DB
 - [x] service/places:GET /places
 
+### manage labels
+
+- [x] preload and lock labels in the DB.
+  - [x] PUT /labels
+- [x] labels low/high watermark
+
+### Refactored
+
+- [x] ui classes places should not be derived from Array
+- [x] places.vue -> composition api
+
 ## settings
 
 - [ ] Operational
@@ -101,6 +101,22 @@
 ### More Refactoring
 
 - [ ] move generic css to core.css
+- [ ] scrolling in itemadd based on flex
+- [ ] standardize backend error handling across all controllers and classes
+  - [ ] controllers
+    - [ ] labels/files (used?)
+    - [ ] labels/types (used?)
+    - [ ] labels
+    - [ ] places
+  - [ ] models
+    - [ ] index
+    - [ ] items
+    - [ ] labels
+    - [ ] places
+  - [ ] classes
+    - [ ] labelfile (used?)
+    - [ ] labeltype (used?)
+- [ ] replace goederen met artikelen
 
 ## Before release
 
@@ -151,4 +167,10 @@ Book:
 
 ### CORS handling
 
-CORS handling needs to be refined so that we handle it correctly. Currently all CORS requests are accepted.
+CORS handling needs to be refined so that we handle it correctly. Currently all
+CORS requests are accepted.
+
+### Label locking
+
+Label locking should be done based on a session id. That session id should also
+be used when labels are consumed.

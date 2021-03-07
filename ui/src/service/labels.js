@@ -1,5 +1,5 @@
 import ivts from '../utils/ivts';
-import notify from '../utils/notify';
+import { error } from '../utils/notify';
 
 function lockLabels(count, arr) {
   ivts.put('/labels', { count })
@@ -12,8 +12,8 @@ function lockLabels(count, arr) {
         const d = err.response.data;
         detail = `${d.message}. (${d.path}: ${d.value}).`;
       }
-      notify.error({
-        summary: 'Aanmaken van nieuw plaats is mislukt',
+      error({
+        summary: 'Aanvragen van labels is mislukt',
         detail,
       });
     });

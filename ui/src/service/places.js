@@ -1,5 +1,5 @@
 import ivts from '../utils/ivts';
-import notify from '../utils/notify';
+import { error } from '../utils/notify';
 
 function getAllPlaces(places) {
   ivts.get('/places')
@@ -8,7 +8,7 @@ function getAllPlaces(places) {
       console.log(places);
     })
     .catch(() => {
-      notify.error({
+      error({
         summary: 'Server fout',
         detail: 'Het ophalen van de plaatsen is mislukt!',
       });
@@ -22,8 +22,8 @@ async function getAllPlacesASync() {
       const { data: response } = await ivts.get('/places');
       console.log('getAllPlacesASync', response);
       resolve(response);
-    } catch (error) {
-      reject(error);
+    } catch (err) {
+      reject(err);
     }
   });
 }
@@ -38,7 +38,7 @@ async function create(label) {
       const d = err.response.data;
       detail = `${d.message}. (${d.path}: ${d.value}).`;
     }
-    notify.error({
+    error({
       summary: 'Aanmaken van nieuw plaats is mislukt',
       detail,
     });

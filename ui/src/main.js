@@ -15,14 +15,17 @@ import TabMenu from 'primevue/tabmenu';
 import Toast from 'primevue/toast';
 import ToastService from 'primevue/toastservice';
 
+import mdiVue from 'mdi-vue';
+import * as mdijs from '@mdi/js';
+
 import App from './App';
 import router from './router';
-// import store from './store';
 
 import 'primevue/resources/themes/vela-green/theme.css';
 import 'primevue/resources/primevue.min.css';
 import 'primeicons/primeicons.css';
 import 'primeflex/primeflex.css';
+import '@mdi/font/css/materialdesignicons.css';
 
 import service from './utils/ivts';
 
@@ -32,7 +35,7 @@ const app = createApp(App);
 
 app.use(VueAxios, axios);
 app.use(router);
-// app.use(store);
+app.use(mdiVue, { icons: mdijs });
 app.use(PrimeVue);
 app.use(ToastService);
 

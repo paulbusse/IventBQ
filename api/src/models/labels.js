@@ -17,6 +17,10 @@ class Label extends Model {
       modelName: 'Labels',
     });
   }
+
+  static associate(models) {
+    Label.hasOne(models.Item);
+  }
 }
 
 module.exports = Label;

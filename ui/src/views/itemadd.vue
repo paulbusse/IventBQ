@@ -5,7 +5,7 @@
       <div class='p-col-4 field'>
         <label for="idDescription">Omschrijving</label>
         <span class="p-input-icon-right">
-          <i class="pi pi-times clickable" @click='emptyDescription'/>
+          <i class="mdi mdi-close clickable" @click='emptyDescription'/>
           <InputText
            id="idDescription"
            v-model="description"
@@ -19,7 +19,7 @@
       <div class='p-col-4 field'>
         <label for="idQuantity">Hoeveelheid</label>
         <span class="p-input-icon-right">
-          <i class="pi pi-times clickable" @click='emptyQuantity'/>
+          <i class="mdi mdi-close clickable" @click='emptyQuantity'/>
           <InputText
            id="idQuantity"
            v-model="quantity"
@@ -34,7 +34,7 @@
         <label for="idCount">Aantal</label>
         <InputNumber id='idCount'
           showButtons buttonLayout="horizontal"
-          incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus"
+          incrementButtonIcon="mdi mdi-plus" decrementButtonIcon="mdi mdi-minus"
           decrementButtonClass="p-button-outlined" incrementButtonClass="p-button-outlined"
           :min='1' v-model="count" aria-describedby="count-help"/>
         <small id="count-help" class="p-error">&nbsp;</small>
@@ -46,10 +46,10 @@
 
       <div class='p-grid'>
         <div class='p-col-12 buttons'>
-          <Button label="Voeg toe" icon="pi pi-plus" @click="addItem"
+          <Button label="Voeg toe" icon="mdi mdi-plus" @click="addItem"
           class='p-button-outlined' :disabled='description.length === 0' autofocus />&nbsp;
-          <Button label='Wijzig' icon="pi pi-save" @click="saveItem"
-            class='p-button-outlined' :disabled='selected.length === 0' autofocus/>
+          <Button label='Wijzig' icon="mdi mdi-sync" @click="saveItem"
+            class='p-button-outlined' :disabled='changeDisabled' autofocus/>
         </div>
       </div>
     </div>
@@ -57,13 +57,17 @@
     <hr>
     <h1>Laatst toegevoegde goederen</h1>
     <div class='itemlist'>
-      <Button label='Bewaar' icon="pi pi-save" @click="saveList"
+      <Button label='Bewaar' icon="mdi mdi-content-save-outline" @click="saveList"
             class='p-button-outlined' :disabled='edited == 0' autofocus/>
       <ul ref='refList' :style='{"max-height": listHeight}'>
         <li v-for="item in items" class='item'
-          :class="{selected : selected == item.key}"
-        :key='item.key'>
-          <span class="icon" @click="deleteItem(item.key)">&#xe90b;</span>
+          :class="{selected : selected !== null && selected.key === item.key}"
+          :key='item.key'>
+          <span class='clickable icon mdi mdi-trash-can-outline'
+            v-if='item.class !== "locked" && item.class !== "error"'
+             @click="deleteItem(item.key)"/>
+          <span v-if='item.class === "locked"' class="icon mdi mdi-lock-outline" />
+          <span v-if='item.class === "error"' class="icon mdi mdi-lock-outline" />
           <span class="editable" @click="itemClick(item)" :class="getLIClass(item)">
             {{item.count}} {{item.description}}
             <span v-if="item.quantity">- {{item.quantity}}</span>
@@ -78,7 +82,7 @@
 
 <script>
 import {
-  ref, reactive, watch, onMounted,
+  ref, reactive, watch, onMounted, computed,
 } from 'vue';
 import state from '../utils/state';
 import svcPlaces from '../service/places';
@@ -90,7 +94,7 @@ export default {
     const quantity = ref('');
     const place = ref('');
     const count = ref(1);
-    const selected = ref('');
+    const selected = ref(null);
     const edited = ref(state.modifiedCreateItems);
 
     const refDescription = ref(null);
@@ -108,9 +112,10 @@ export default {
       listHeight.value = `calc(100vh - ${top}px)`;
     });
 
+    const changeDisabled = computed(() => (selected.value === null || selected.value.class === 'locked'));
+
     watch(description,
       (cur) => {
-        console.log('watch description', cur);
         if (cur.length === 0) descriptionerr.value = 'Omschrijving mag niet leeg zijn.';
         else descriptionerr.value = '';
       });
@@ -138,7 +143,7 @@ export default {
         place: place.value,
       });
 
-      selected.value = '';
+      selected.value = null;
       edited.value = 1;
     }
 
@@ -148,32 +153,31 @@ export default {
     }
 
     function itemClick(item) {
-      selected.value = item.key;
+      selected.value = item;
 
       description.value = item.description;
       quantity.value = item.quantity;
       count.value = item.count;
       place.value = item.place;
-      console.log(item);
     }
 
     function saveItem() {
       console.log(place.value);
-      items.value.set(selected.value, {
+      items.value.set(selected.value.key, {
         description: description.value,
         quantity: quantity.value,
         count: count.value,
         place: place.value,
       });
 
-      selected.value = '';
+      selected.value = null;
       edited.value = 1;
     }
 
     function getLIClass(item) {
-      let liClass = item.class;
-      if (selected.value === item.key) liClass += ' selected';
-      return liClass;
+      let c = item.class;
+      if (selected.value && selected.value.key === item.key) c += ' selected';
+      return c;
     }
 
     function emptyDescription() {
@@ -190,6 +194,7 @@ export default {
 
     function saveList() {
       items.value.backendSync();
+      edited.value = 0;
     }
 
     return {
@@ -223,6 +228,7 @@ export default {
       refDescription,
       refQuantity,
       getLIClass,
+      changeDisabled,
     };
   },
 };
@@ -289,12 +295,11 @@ h1 {
     };
 
     .icon {
-      font-family: 'primeicons';
       margin-right: 1em;
       color: var(--primary-color);
     }
 
-    .icon:hover {
+    .clickable:hover {
       cursor: pointer;
     }
 
@@ -315,7 +320,6 @@ h1 {
     }
 
     .selected {
-      font-weight: bold;
       color:var(--primary-color);
     }
   }

@@ -1,21 +1,31 @@
 import event from './event';
 
-function error(msg) {
-  event.emit('toast', { life: 5000, severity: 'error', ...msg });
+export function messenger(msg) {
+  event.emit('toast', { life: 5000, ...msg });
 }
 
-function warn(msg) {
-  event.emit('toast', { life: 5000, severity: 'warn', ...msg });
+export function error(msg) {
+  messenger({ severity: 'error', ...msg });
 }
 
-function info(msg) {
-  event.emit('toast', { life: 5000, severity: 'info', ...msg });
+export function warn(msg) {
+  messenger({ severity: 'warn', ...msg });
 }
 
-function success(msg) {
-  event.emit('toast', { life: 5000, severity: 'success', ...msg });
+export function info(msg) {
+  messenger({ severity: 'info', ...msg });
 }
 
-export default {
-  error, warn, info, success,
-};
+export function success(msg) {
+  messenger({ severity: 'success', ...msg });
+}
+
+export function plural(s, c) {
+  if (c === 1) return s;
+  return `${s}en`;
+}
+
+export function conjugate(s, c) {
+  if (c === 1) return s;
+  return `${s}en`;
+}
