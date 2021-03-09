@@ -10,6 +10,23 @@ N/A
 
 N/A
 
+### more stuff for this screen
+
+- [ ] POST /items
+- [ ] PUT /items
+- [ ] DELETE /items
+
+### classes/items
+
+- [x] Rename label to description ()
+- [x] update an items
+  - [x] when the count > previous count
+  - [x] when the count < previous count
+- [x] Save to DB
+- [x] GET /items?p=itemdescriptions
+
+## Merge
+
 ### Save new UI items in DB
 
 - [x] transform the created items to DB structures
@@ -27,24 +44,6 @@ N/A
 - [x] api routes: add new routs
 - [x] api controller add controller
 - [x] api model add items model
-
-### more stuff for this screen
-
-- [ ] POST /items
-- [ ] PUT /items
-- [ ] DELETE /items
-- [ ] GET /items?q=recentadds
-
-### classes/items
-
-- [x] Rename label to description ()
-- [x] update an items
-  - [x] when the count > previous count
-  - [x] when the count < previous count
-- [ ] Save to DB
-- [ ] Load from DB
-
-## Merge
 
 ### Use db migration instead of sync
 
@@ -102,10 +101,9 @@ N/A
 
 - [ ] move generic css to core.css
 - [ ] scrolling in itemadd based on flex
+- [ ] remove labelfiles and labeltypes references
 - [ ] standardize backend error handling across all controllers and classes
   - [ ] controllers
-    - [ ] labels/files (used?)
-    - [ ] labels/types (used?)
     - [ ] labels
     - [ ] places
   - [ ] models
@@ -113,9 +111,6 @@ N/A
     - [ ] items
     - [ ] labels
     - [ ] places
-  - [ ] classes
-    - [ ] labelfile (used?)
-    - [ ] labeltype (used?)
 - [ ] replace goederen met artikelen
 
 ## Before release
@@ -144,6 +139,7 @@ N/A
 - [ ] create a input text component based on itemadd Inputtexts
   - [ ] create the component
   - [ ] use for itemadd description and quantity
+- [ ] Proper implementation of CORS;
 
 ## Ideas
 
@@ -164,11 +160,6 @@ Wine:
 Book:
 
 - Author
-
-### CORS handling
-
-CORS handling needs to be refined so that we handle it correctly. Currently all
-CORS requests are accepted.
 
 ### Label locking
 
