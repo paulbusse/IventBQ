@@ -16,5 +16,6 @@ router.post('/places', placesController.create);
 
 // Items
 router.post('/items', itemsController.create);
+router.get('/items', itemsController.find);
 
 module.exports = router;

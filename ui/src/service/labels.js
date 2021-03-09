@@ -5,7 +5,6 @@ function lockLabels(count, arr) {
   ivts.put('/labels', { count })
     .then((res) => {
       arr.push(...res.data);
-      console.log('LockLables', arr);
     }).catch((err) => {
       let detail = err.message;
       if (err.response) {

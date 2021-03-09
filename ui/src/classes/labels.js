@@ -19,7 +19,6 @@ class Labels {
   }
 
   takeOff(n) {
-    console.log('labels.taksoff', this);
     this.reload();
     return this.lLabels.splice(0, n);
   }

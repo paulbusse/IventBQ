@@ -3,10 +3,15 @@ import {
   messenger, error, plural, conjugate,
 } from '../utils/notify';
 
+function getDescriptions(callback) {
+  ivts.get('/items?p=itemdescriptions')
+    .then((res) => callback(res.data))
+    .catch((err) => error(err.response.data));
+}
+
 function create(items, cbResults) {
   ivts.post('/items', items)
     .then((res) => {
-      console.log('items service create', res);
       let count = items.length;
       const { successCnt, errorCnt } = res.data;
       const summary = 'Bewaren van artikelen';
@@ -30,7 +35,6 @@ function create(items, cbResults) {
       });
       cbResults(res.data.results);
     }).catch((err) => {
-      console.log('items service create', err);
       let detail = err.message;
       if (err.response) {
         const d = err.response.data;
@@ -45,4 +49,5 @@ function create(items, cbResults) {
 
 export default {
   create,
+  getDescriptions,
 };

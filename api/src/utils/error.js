@@ -1,7 +1,8 @@
 const logger = require('./logger');
 
 const errList = {
-  E1: 'Aanmaak van goederen is mislukt',
+  E1: 'Aanmaak van artikelen',
+  E2: 'Ophalen van artikelen',
 };
 
 function errorStringHandler(error) {

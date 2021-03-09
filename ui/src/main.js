@@ -3,6 +3,7 @@ import PrimeVue from 'primevue/config';
 import axios from 'axios';
 import VueAxios from 'vue-axios';
 
+import AutoComplete from 'primevue/autocomplete';
 import Button from 'primevue/button';
 import Card from 'primevue/card';
 import Column from 'primevue/column';
@@ -14,9 +15,6 @@ import InputText from 'primevue/inputtext';
 import TabMenu from 'primevue/tabmenu';
 import Toast from 'primevue/toast';
 import ToastService from 'primevue/toastservice';
-
-import mdiVue from 'mdi-vue';
-import * as mdijs from '@mdi/js';
 
 import App from './App';
 import router from './router';
@@ -35,10 +33,10 @@ const app = createApp(App);
 
 app.use(VueAxios, axios);
 app.use(router);
-app.use(mdiVue, { icons: mdijs });
 app.use(PrimeVue);
 app.use(ToastService);
 
+app.component('AutoComplete', AutoComplete);
 app.component('Button', Button);
 app.component('Card', Card);
 app.component('Column', Column);

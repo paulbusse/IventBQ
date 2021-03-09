@@ -5,7 +5,6 @@ function getAllPlaces(places) {
   ivts.get('/places')
     .then((res) => {
       places.push(...res.data);
-      console.log(places);
     })
     .catch(() => {
       error({
@@ -20,7 +19,6 @@ async function getAllPlacesASync() {
   return new Promise(async (resolve, reject) => {
     try {
       const { data: response } = await ivts.get('/places');
-      console.log('getAllPlacesASync', response);
       resolve(response);
     } catch (err) {
       reject(err);

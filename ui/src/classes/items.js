@@ -5,11 +5,9 @@ export default class Items extends Array {
   constructor(labels) {
     super();
     this.labels = labels;
-    console.log(this);
   }
 
   add(item) {
-    console.log(this);
     const newItem = item;
     newItem.labels = [...this.labels.takeOff(item.count)];
     newItem.key = simpleRun();
@@ -21,20 +19,17 @@ export default class Items extends Array {
   set(key, values) {
     const index = this.findIndex((item) => item.key === key);
     const item = this[index];
-    console.log('set', item, key, values);
 
     item.description = values.description;
     item.quantity = values.quantity;
     item.place = values.place;
 
     const diff = item.count - values.count;
-    console.log('set', diff);
     if (diff > 0) {
       item.labels.splice(item.labels.length - diff, item.labels.length);
     } else if (diff < 0) {
       // item.labels.push(...this.labels.tafeOff(-diff));
       const nl = this.labels.takeOff(-diff);
-      console.log(nl);
       item.labels.push(...nl);
     }
     item.count = values.count;
@@ -51,7 +46,6 @@ export default class Items extends Array {
   }
 
   cbCreate(results) {
-    console.log('cbCreate', results, this);
     results.forEach((res) => {
       const item = this.find((el) => el.key === res.uikey);
       if (item.class !== 'error') {
@@ -64,7 +58,6 @@ export default class Items extends Array {
         }
       }
     });
-    console.log('cbCreate', this);
   }
 
   backendSync() {
@@ -81,7 +74,6 @@ export default class Items extends Array {
         }));
       }
     });
-    console.log('backendSync', this);
     const boundCreate = this.cbCreate.bind(this);
     if (this.create.length) svcItems.create(this.create, boundCreate);
   }

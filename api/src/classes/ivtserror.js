@@ -4,6 +4,7 @@
 const iErrorList = {
   IE1: { detail: 'Het etiket(${0}) bestaat niet.' },
   IE2: { detail: 'Het etiket(${0}) is al in gebruik.' },
+  IE3: { detail: 'De artikel query kon niet herkend worden.' },
 };
 
 // Template is used in the eval below

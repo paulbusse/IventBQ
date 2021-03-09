@@ -1,14 +1,68 @@
 /* eslint-disable no-console */
+const { Sequelize, Op } = require('sequelize');
 
 const Item = require('../models/items');
-const errHandler = require('../utils/error');
 const Label = require('../models/labels');
 const IvtsError = require('../classes/ivtserror');
 
-const getAll = async function getAll(req, res) {
-  res.status(404).json({ status: 'Not implemented yet' });
+const errHandler = require('../utils/error');
+
+/*
+ * GET /items
+ */
+async function itemDescriptions(req, res) {
+  const tempDesc = await Item.findAll({
+    attributes: [Sequelize.fn('DISTINCT', Sequelize.col('description')), 'description'],
+    order: ['description'],
+  });
+  const descs = [];
+  tempDesc.forEach((el) => {
+    descs.push(el.description);
+  });
+  res.status(200).json(descs);
+}
+
+async function recentAdds(req, res) {
+  const uiKeys = await Item.findAll({
+    attributes: [Sequelize.fn('DISTINCT', Sequelize.col('uikey')), 'uikey'],
+    order: [['createdAt', 'DESC']],
+    limit: 20,
+    raw: true,
+  });
+  const uiKeyA = [];
+  uiKeys.forEach((el) => {
+    uiKeyA.push(el.uikey);
+  });
+  const items = await Item.findAll({
+    where: {
+      uikey: { [Op.in]: uiKeyA },
+    },
+  });
+  res.status(200).json(items);
+}
+
+const find = async function find(req, res) {
+  if ('p' in req.query) {
+    console.log(req.query);
+    switch (req.query.p) {
+      case 'recentadds':
+        recentAdds(req, res);
+        break;
+      case 'itemdescriptions':
+        itemDescriptions(req, res);
+        break;
+      default: {
+        const err = new IvtsError('IE3');
+        res.status(400).json(errHandler('E2', err));
+        break;
+      }
+    }
+  } else { res.status(404).json({ status: 'Not implemented yet (find)' }); }
 };
 
+/*
+ * POST /items
+ */
 async function doCreate(item) {
   try {
     const label = await Label.findByPk(item.labelid);
@@ -40,7 +94,6 @@ const create = async function create(req, res) {
   let results;
   try {
     results = await Promise.all(promises);
-    console.log('create', results);
     results.forEach((element) => {
       if (element.result === 'ok') successCnt += 1;
       else errorCnt += 1;
@@ -59,7 +112,7 @@ const destroy = function destroy(req, res) {
 };
 
 module.exports = {
-  getAll,
+  find,
   create,
   destroy,
 };

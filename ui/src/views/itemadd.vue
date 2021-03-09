@@ -4,28 +4,26 @@
     <div class='p-grid itemadd'>
       <div class='p-col-4 field'>
         <label for="idDescription">Omschrijving</label>
-        <span class="p-input-icon-right">
-          <i class="mdi mdi-close clickable" @click='emptyDescription'/>
-          <InputText
-           id="idDescription"
-           v-model="description"
-           type="text"
-           aria-describedby="description-help"
-           ref='refDescription'
-          />
-        </span>
+        <AutoComplete
+          id="idDescription"
+          style='width:100%'
+          v-model="description"
+          :suggestions="filteredDescriptions"
+          @complete="searchDescription($event)"
+          @focus="focus($event)"
+          aria-describedby="description-help"
+        />
         <small id="description-help" class="p-error">{{descriptionerr}}&nbsp;</small>
       </div>
       <div class='p-col-4 field'>
         <label for="idQuantity">Hoeveelheid</label>
         <span class="p-input-icon-right">
-          <i class="mdi mdi-close clickable" @click='emptyQuantity'/>
           <InputText
            id="idQuantity"
            v-model="quantity"
            type="text"
            aria-describedby="quantity-help"
-           ref='refQuantity'
+           @focus="focus($event)"
           />
         </span>
         <small id="quantity-help" class="p-error">&nbsp;</small>
@@ -43,7 +41,9 @@
         <label for="place">Plaats</label>
         <Dropdown id='place' v-model="place" :options='places.places' optionLabel='label'/>
       </div>
+<div class='p-grid'>
 
+      </div>
       <div class='p-grid'>
         <div class='p-col-12 buttons'>
           <Button label="Voeg toe" icon="mdi mdi-plus" @click="addItem"
@@ -52,6 +52,7 @@
             class='p-button-outlined' :disabled='changeDisabled' autofocus/>
         </div>
       </div>
+
     </div>
 
     <hr>
@@ -81,6 +82,7 @@
 </template>
 
 <script>
+
 import {
   ref, reactive, watch, onMounted, computed,
 } from 'vue';
@@ -97,10 +99,11 @@ export default {
     const selected = ref(null);
     const edited = ref(state.modifiedCreateItems);
 
-    const refDescription = ref(null);
-    const refQuantity = ref(null);
     const refList = ref([]);
     const listHeight = ref('calc(100vh - 500px)');
+
+    // Autocomplete test
+    const filteredDescriptions = ref([]);
 
     // const tempitems = new Items();
     const items = ref(state.createItems);
@@ -127,7 +130,6 @@ export default {
     }
 
     if (items.value.length > 0) {
-      console.log(items.value[0]);
       description.value = items.value[0].description;
       quantity.value = items.value[0].quantity;
       place.value = items.value[0].place;
@@ -145,6 +147,7 @@ export default {
 
       selected.value = null;
       edited.value = 1;
+      state.itemDescriptions.add(description.value);
     }
 
     function deleteItem(key) {
@@ -162,7 +165,6 @@ export default {
     }
 
     function saveItem() {
-      console.log(place.value);
       items.value.set(selected.value.key, {
         description: description.value,
         quantity: quantity.value,
@@ -172,6 +174,7 @@ export default {
 
       selected.value = null;
       edited.value = 1;
+      state.itemDescriptions.add(description.value);
     }
 
     function getLIClass(item) {
@@ -180,21 +183,28 @@ export default {
       return c;
     }
 
-    function emptyDescription() {
-      console.log('emptyDescription');
-      description.value = '';
-      refDescription.value.$el.focus();
-    }
-
-    function emptyQuantity() {
-      console.log('emptyQuantity');
-      quantity.value = '';
-      refQuantity.value.$el.focus();
-    }
-
     function saveList() {
       items.value.backendSync();
       edited.value = 0;
+    }
+
+    let prevQuery = null;
+    function searchDescription(event) {
+      const curQuery = event.query;
+      let list;
+      if (curQuery.indexOf(prevQuery) === 0) list = filteredDescriptions.value;
+      else list = state.itemDescriptions.descriptions;
+
+      const newList = list.filter((str) => str.indexOf(curQuery) !== -1);
+      filteredDescriptions.value = newList;
+
+      prevQuery = curQuery;
+    }
+
+    function focus(event) {
+      if (!event.relatedTarget) return;
+      if (event.relatedTarget.id === event.target.id) return;
+      event.target.select();
     }
 
     return {
@@ -204,8 +214,6 @@ export default {
       quantity,
       place,
       count,
-      emptyDescription,
-      emptyQuantity,
 
       // Items
       items,
@@ -225,10 +233,14 @@ export default {
       // Layout
       listHeight,
       refList,
-      refDescription,
-      refQuantity,
+
       getLIClass,
       changeDisabled,
+
+      // Autocomplete
+      searchDescription,
+      filteredDescriptions,
+      focus,
     };
   },
 };
@@ -250,10 +262,6 @@ h1 {
     .p-inputtext {
       width: 100%;
     }
-  }
-
-  .clickable:hover {
-    cursor: pointer;
   }
 
   .number {
