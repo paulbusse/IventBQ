@@ -8,7 +8,9 @@ N/A
 
 ### Refactor
 
-N/A
+- [x] standardize backend error handling across all controllers and classes
+  - [x] labels
+  - [x] places
 
 ### more stuff for this screen
 
@@ -96,21 +98,14 @@ N/A
 ### More bugs
 
 - [ ] When entering itemadd, focus should be on description field
+- [ ] the favicon is the Vue logo.
 
 ### More Refactoring
 
 - [ ] move generic css to core.css
 - [ ] scrolling in itemadd based on flex
 - [ ] remove labelfiles and labeltypes references
-- [ ] standardize backend error handling across all controllers and classes
-  - [ ] controllers
-    - [ ] labels
-    - [ ] places
-  - [ ] models
-    - [ ] index
-    - [ ] items
-    - [ ] labels
-    - [ ] places
+
 - [ ] replace goederen met artikelen
 
 ## Before release
