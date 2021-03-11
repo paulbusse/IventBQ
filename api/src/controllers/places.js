@@ -1,4 +1,5 @@
 /* eslint-disable no-console */
+const errHandler = require('../utils/error');
 const Place = require('../models/places');
 
 exports.getAll = async function getAll(req, res) {
@@ -10,34 +11,19 @@ exports.getAll = async function getAll(req, res) {
 exports.create = function create(req, res) {
   console.log('POST /places');
 
-  const label = req.body.name;
+  const { label } = req.body;
   Place.create({ label })
     .then(() => {
       Place.findOne({ where: { label } })
         .then((data) => res.status(201).json(data))
-        .catch((error) => {
-          const noterr = error.errors[0];
-          const err = {
-            code: 'C_P_2',
-            message: noterr.message,
-            path: noterr.path,
-            value: noterr.value,
-          };
-
-          console.log(err);
-          res.status(400).json(err);
+        .catch((err) => {
+          const error = errHandler('E3', err);
+          res.status(400).json(error);
         });
     })
-    .catch((error) => {
-      const noterr = error.errors[0];
-      const err = {
-        code: 'C_P_1',
-        message: noterr.message,
-        path: noterr.path,
-        value: noterr.value,
-      };
-      console.log(err);
-      res.status(400).json(err);
+    .catch((err) => {
+      const error = errHandler('E3', err);
+      res.status(400).json(error);
     });
 };
 

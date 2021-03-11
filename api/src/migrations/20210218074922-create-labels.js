@@ -9,7 +9,7 @@ module.exports = {
       },
       state: {
         type: Sequelize.ENUM,
-        values: ['Locked', 'Assigned', 'Free'],
+        values: ['Locked', 'Assigned', 'Free', 'Deleted'],
         defaultValue: 'Locked',
         allowNull: false,
       },

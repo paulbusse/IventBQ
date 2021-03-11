@@ -1,5 +1,5 @@
 /* eslint-disable no-console */
-const { Sequelize, Op } = require('sequelize');
+const { Sequelize } = require('sequelize');
 
 const Item = require('../models/items');
 const Label = require('../models/labels');
@@ -22,32 +22,10 @@ async function itemDescriptions(req, res) {
   res.status(200).json(descs);
 }
 
-async function recentAdds(req, res) {
-  const uiKeys = await Item.findAll({
-    attributes: [Sequelize.fn('DISTINCT', Sequelize.col('uikey')), 'uikey'],
-    order: [['createdAt', 'DESC']],
-    limit: 20,
-    raw: true,
-  });
-  const uiKeyA = [];
-  uiKeys.forEach((el) => {
-    uiKeyA.push(el.uikey);
-  });
-  const items = await Item.findAll({
-    where: {
-      uikey: { [Op.in]: uiKeyA },
-    },
-  });
-  res.status(200).json(items);
-}
-
 const find = async function find(req, res) {
   if ('p' in req.query) {
     console.log(req.query);
     switch (req.query.p) {
-      case 'recentadds':
-        recentAdds(req, res);
-        break;
       case 'itemdescriptions':
         itemDescriptions(req, res);
         break;
@@ -65,9 +43,13 @@ const find = async function find(req, res) {
  */
 async function doCreate(item) {
   try {
+    // Validation
     const label = await Label.findByPk(item.labelid);
     if (!label) throw new IvtsError('IE1', item.labelid);
+
     if (label.state === 'Assigned') throw new IvtsError('IE2', item.labelid);
+
+    // Creation
     await Item.create(item);
     await label.update({ state: 'Assigned' });
     return { uikey: item.uikey, labelid: item.labelid, result: 'ok' };
@@ -107,6 +89,9 @@ const create = async function create(req, res) {
   }
 };
 
+/*
+ * DELETE /items
+ */
 const destroy = function destroy(req, res) {
   res.status(404).json({ status: 'Not implemented yet' });
 };

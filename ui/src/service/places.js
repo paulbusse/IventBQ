@@ -28,18 +28,10 @@ async function getAllPlacesASync() {
 
 async function create(label) {
   try {
-    const { data: response } = await ivts.post('/places', { name: label });
+    const { data: response } = await ivts.post('/places', { label });
     return response;
   } catch (err) {
-    let detail = err.message;
-    if (err.response) {
-      const d = err.response.data;
-      detail = `${d.message}. (${d.path}: ${d.value}).`;
-    }
-    error({
-      summary: 'Aanmaken van nieuw plaats is mislukt',
-      detail,
-    });
+    error(err.response.data);
   }
   return null;
 }

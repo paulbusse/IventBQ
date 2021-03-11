@@ -5,7 +5,7 @@ class Label extends Model {
     super.init({
       state: {
         type: DataTypes.ENUM,
-        values: ['Locked', 'Assigned', 'Free'],
+        values: ['Locked', 'Assigned', 'Free', 'Deleted'],
         defaultValue: 'Locked',
         allowNull: false,
       },

@@ -3,10 +3,17 @@ const { DataTypes, Model } = require('sequelize');
 class Item extends Model {
   static init(sequelize) {
     super.init({
-      description: DataTypes.STRING,
+      description: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
       quantity: DataTypes.STRING,
       uikey: DataTypes.STRING,
-      labelid: DataTypes.NUMBER,
+      labelid: {
+        type: DataTypes.NUMBER,
+        unique: true,
+        allowNull: false,
+      },
       placeid: DataTypes.NUMBER,
     }, {
       sequelize,

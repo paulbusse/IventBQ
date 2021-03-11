@@ -41,9 +41,6 @@ exports.put = async function put(req, res) {
     });
 
     qr.forEach((el) => result.push(el.id));
-
-    // eslint-disable-next-line no-console
-    console.log(result);
   }
 
   res.status(200).json(result);
