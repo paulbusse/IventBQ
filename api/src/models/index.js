@@ -1,12 +1,34 @@
 const Sequelize = require('sequelize');
 const logger = require('../utils/logger');
 
-const Place = require('./place');
-const Label = require('./label');
+const Label = require('./labels');
+const Place = require('./places');
+const Item = require('./items');
 
 const env = process.env.NODE_ENV || 'development';
-// eslint-disable-next-line import/no-dynamic-require
-const config = require('../../../config/db.json')[env];
+const config = require('../config/config.json')[env];
+
+/*
+ * This function validates if the software is aligned with the database version.
+ */
+async function isDbUptodate(sequelize, wanted) {
+  const latest = await sequelize.query('SELECT * FROM sequelizemeta ORDER BY name DESC LIMIT 1;', {
+    type: sequelize.QueryTypes.SELECT,
+  });
+
+  const lName = latest[0].name;
+  const timestamp = lName.substring(0, lName.indexOf('-'));
+
+  if (timestamp !== wanted) {
+    logger.error(`FATAL: database version (${timestamp}) not matching with expected database version(${wanted})!`);
+    logger.info('Did you run the migrate script? See install documentation');
+    process.exit(1);
+  }
+}
+
+/*
+ * Setup the DB
+ */
 
 const db = {};
 
@@ -19,12 +41,13 @@ if (config.use_env_variable) {
   sequelize = new Sequelize(config);
 }
 
-Place.init(sequelize);
-Label.init(sequelize);
+isDbUptodate(sequelize, '20210302065850');
 
-sequelize.sync({ alter: true });
+const models = { Place, Label, Item };
 
-db.sequelize = sequelize;
-db.Sequelize = Sequelize;
+Object.values(models).forEach((element) => element.init(sequelize));
+Object.values(models).forEach((element) => {
+  if (typeof element.associate === 'function') element.associate(models);
+});
 
 module.exports = db;

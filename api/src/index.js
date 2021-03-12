@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
 const express = require('express');
+const cors = require('cors');
 const morgan = require('morgan');
 
 const logger = require('./utils/logger');
@@ -10,6 +11,7 @@ const rLabels = require('./routers/labels');
 const db = require('./models');
 
 const app = express();
+app.use(cors());
 
 // setup the logger
 app.use(morgan(':remote-addr - :remote-user ":method :url HTTP/:http-version" :status :res[content-length] ":referrer" ":user-agent :response-time ms"',

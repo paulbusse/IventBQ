@@ -18,7 +18,8 @@
 </template>
 
 <script>
-import IvtMenu from './components/menu.vue';
+import event from './utils/event';
+import IvtMenu from './components/menu';
 
 export default {
   components: {
@@ -29,8 +30,22 @@ export default {
     return {
       messages: [],
       items: [
-        { label: 'Plaatsen', to: '/places' },
-        { label: 'Items', to: '/item' },
+        {
+          label: 'Goederen',
+          key: 'Items',
+          submenu: [
+            { label: 'Overzicht', key: 'ItemView', to: '/itemview' },
+            { label: 'Aanmaken', key: 'ItemAdd', to: '/itemadd' },
+          ],
+        },
+        {
+          label: 'Plaatsen',
+          key: 'Plaatsen',
+          submenu: [
+            { label: 'Overzicht', key: 'PlaceView', to: '/places' },
+            { label: 'Aanmaken', key: 'PlaceAdd', to: '/placeadd' },
+          ],
+        },
       ],
       menuLeft: null,
       maskVisible: false,
@@ -63,8 +78,9 @@ export default {
   mounted() {
     const el = document.querySelector('.i-app-menu');
     const style = getComputedStyle(el);
-    // eslint-disable-next-line no-console
     if (style.left !== '0px') this.menuLeft = `-${style.width}`;
+
+    event.on('toast', (e) => { this.$toast.add(e); });
   },
 
   watch: {
@@ -106,7 +122,6 @@ $headerheight: 100px;
   left: 0;
   top: $headerheight;
   border-right:  1px solid white;
-  padding: 10px;
   background-color: var(--surface-a);
 }
 
@@ -116,7 +131,7 @@ $headerheight: 100px;
   left: $menuwidth;
   top: $headerheight;
   padding: 10px;
-  width: 100%;
+  width: calc(100% - #{$menuwidth});
   height: 100%;
   background-color: var(--surface-a);
 }
@@ -143,6 +158,10 @@ $headerheight: 100px;
   width: 100%;
 }
 
+html {
+  height: 100%;
+}
+
 body {
   position: fixed;
   background-color: var(--surface-a);
@@ -162,6 +181,7 @@ body {
   }
 
   .i-app-content {
+    width: 100%;
     left: 0;
   }
 

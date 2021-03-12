@@ -1,6 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import Places from '../views/Places.vue';
-import Item from '../views/Item.vue';
+import Places from '../views/places';
+import PlaceAdd from '../views/placeadd';
+import ItemAdd from '../views/itemadd';
+import NIY from '../views/niy';
 
 const routes = [
   {
@@ -13,14 +15,23 @@ const routes = [
     component: Places,
   },
   {
-    path: '/item',
-    name: 'Item',
-    component: Item,
+    path: '/placeadd',
+    name: 'PlaceAdd',
+    component: PlaceAdd,
+  },
+  {
+    path: '/itemadd',
+    name: 'ItemAdd',
+    component: ItemAdd,
+  },
+  {
+    path: '/itemview',
+    name: 'NIY2',
+    component: NIY,
   },
 ];
 
-// eslint-disable-next-line new-cap
-const router = new createRouter({
+const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
 });

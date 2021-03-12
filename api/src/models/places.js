@@ -2,14 +2,9 @@ const { DataTypes, Model } = require('sequelize');
 
 class Place extends Model {
   static init(sequelize) {
-    return super.init({
-      id: {
-        type: DataTypes.INTEGER,
-        autoincrement: true,
-        primaryKey: true,
-      },
+    super.init({
       label: {
-        type: DataTypes.STRING(20),
+        type: DataTypes.STRING,
         allowNull: false,
         unique: true,
         validate: {
@@ -17,7 +12,15 @@ class Place extends Model {
           len: [1, 20],
         },
       },
-    }, { sequelize });
+    }, {
+      sequelize,
+      modelName: 'Places',
+    });
+    return Place;
+  }
+
+  static associate(models) {
+    Place.hasMany(models.Item);
   }
 }
 

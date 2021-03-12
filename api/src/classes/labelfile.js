@@ -2,7 +2,7 @@ const process = require('process');
 const { spawn } = require('child_process');
 const fs = require('fs');
 const CsvWriter = require('csv-writer');
-const Label = require('../models/label');
+const Label = require('../models/labels');
 
 // FEATURE: add the fileid on the label for easier management
 
