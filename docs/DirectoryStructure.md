@@ -11,6 +11,8 @@
    the product, e.g. the label types, or the sqlite database for the product.
 * `docs`: This documentation
 * `log`: This is the default place for the logs
+* `public`: A place to store static information for the web. This directory is
+   empty fot the moment
 
 ## API
 
@@ -198,6 +200,7 @@ This is a list of the services called
 | Operator | endpoint | description |
 | -------- | -------- | ----------- |
 | `GET` | `/items?p=itemdescriptions` | retrieves a list of distinct item descriptions
+| `GET` | `/items?p=stored` | retrieves a list of stored item
 | `POST` | `/items` | creates one or more items
 | `PUT` | `/labels` | locks a set of labels and returns them.
 | `GET` | `/places` | get a list of all defined places

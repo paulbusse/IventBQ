@@ -2,7 +2,8 @@ import { createRouter, createWebHistory } from 'vue-router';
 import Places from '../views/places';
 import PlaceAdd from '../views/placeadd';
 import ItemAdd from '../views/itemadd';
-import NIY from '../views/niy';
+import ItemView from '../views/itemview';
+// import NIY from '../views/niy';
 
 const routes = [
   {
@@ -26,8 +27,8 @@ const routes = [
   },
   {
     path: '/itemview',
-    name: 'NIY2',
-    component: NIY,
+    name: 'ItemView',
+    component: ItemView,
   },
 ];
 

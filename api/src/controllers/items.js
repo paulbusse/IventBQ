@@ -3,6 +3,7 @@ const { Sequelize } = require('sequelize');
 
 const Item = require('../models/items');
 const Label = require('../models/labels');
+const Place = require('../models/places');
 const IvtsError = require('../classes/ivtserror');
 
 const errHandler = require('../utils/error');
@@ -22,12 +23,40 @@ async function itemDescriptions(req, res) {
   res.status(200).json(descs);
 }
 
+async function itemsStored(req, res) {
+  try {
+    const items = await Item.findAll({
+      attributes: [
+        'id',
+        'description',
+        'quantity',
+        'uikey',
+        'labelid',
+        'createdAt',
+        'updatedAt',
+      ],
+      order: [['createdAt', 'ASC']],
+      include: [{
+        model: Place,
+        as: 'place',
+        attributes: ['id', 'label'],
+      }],
+    });
+    res.status(200).json(items);
+  } catch (error) {
+    res.status(400).json(errHandler('E2', error));
+  }
+}
+
 const find = async function find(req, res) {
   if ('p' in req.query) {
     console.log(req.query);
     switch (req.query.p) {
       case 'itemdescriptions':
         itemDescriptions(req, res);
+        break;
+      case 'stored':
+        itemsStored(req, res);
         break;
       default: {
         const err = new IvtsError('IE3');

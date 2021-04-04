@@ -9,6 +9,10 @@ export default class Places {
     return this.places.length;
   }
 
+  getById(id) {
+    return this.places.find((place) => place.id === id);
+  }
+
   add(place) {
     this.places.push(place);
   }

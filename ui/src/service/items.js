@@ -9,6 +9,12 @@ function getDescriptions(callback) {
     .catch((err) => error(err.response.data));
 }
 
+function getStored(cbResults) {
+  ivts.get('/items?p=stored')
+    .then((res) => cbResults(res.data))
+    .catch((err) => error(err.response.data));
+}
+
 function create(items, cbResults) {
   ivts.post('/items', items)
     .then((res) => {
@@ -50,4 +56,5 @@ function create(items, cbResults) {
 export default {
   create,
   getDescriptions,
+  getStored,
 };

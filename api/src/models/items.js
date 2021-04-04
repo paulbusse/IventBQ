@@ -23,7 +23,7 @@ class Item extends Model {
 
   static associate(models) {
     Item.belongsTo(models.Label);
-    Item.belongsTo(models.Place);
+    Item.belongsTo(models.Place, { as: 'place', foreignKey: 'placeid', targetKey: 'id' });
   }
 }
 

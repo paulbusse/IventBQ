@@ -20,6 +20,7 @@ app.use(morgan(':remote-addr - :remote-user ":method :url HTTP/:http-version" :s
 app.use(express.json());
 app.use('/', rMain);
 app.use('/labels', rLabels);
+app.use(express.static('public'));
 
 const port = process.env.PORT || 4000;
 app.listen(port, '0.0.0.0', () => {

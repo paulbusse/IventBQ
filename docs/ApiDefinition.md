@@ -234,6 +234,7 @@ Valid options for the parameter p are:
 | option | description |
 | --- | --- |
 | `itemdescriptions` | this returns a list of distinct item definitions in the database. It does not take the state of the item into account.
+| `stored` | this returns a list items stored in the system.
 
 #### Request body
 
@@ -241,23 +242,8 @@ Valid options for the parameter p are:
 
 #### Response body
 
-In case of a `200` response, the following structure is returned:
-
-| Name | Type | Description |
-| --- | --- | --- |
-| `successCnt` | number | the number of items the are successfully created
-| `errorCnt` | number | the number of items the could not be created.
-| `results` | array | array of results, one per requested create.
-
-Even if all the requests failed, the call will return a `200` status. An error status
-is returned when an unexpected error in the procedure occurred.
-
-| Name | Type | Description |
-| --- | --- | --- |
-| `uikey` | string | if it was passed in the call |
-| `labelid` | number | this is the key that can be  used for further communication.
-| `result` | string | This field equals `ok` or `error`, indicating if the creation succeeded or not.
-| `error` | Error | This is only present if the result field indicates an error.
+The response body depends on the query. If the predefined filter is
+`itemdescriptions`, the call returns an array of item descriptions.
 
 ##### Example
 
@@ -269,9 +255,62 @@ is returned when an unexpected error in the procedure occurred.
 ]
 ```
 
+The predefined filter `stored` returns an array of items. This array contains
+the following fields:
+
+* `id`
+* `description`
+* `quantity`
+* `uikey`
+* `labelid`
+* `createdAt`
+* `updatedAt`
+* A description of the place:
+  * `id`
+  * `label`
+
+##### Example
+
+```json
+[
+    {
+        "id": 1,
+        "description": "courgettesoep",
+        "quantity": "2p",
+        "uikey": "a",
+        "labelid": 51,
+        "createdAt": "2021-03-11T07:40:54.112Z",
+        "updatedAt": "2021-03-11T07:40:54.112Z",
+        "place": {
+            "id": 1,
+            "label": "Diepvries"
+        }
+    },
+    {
+        "id": 2,
+        "description": "courgettesoep",
+        "quantity": "2p",
+        "uikey": "a",
+        "labelid": 52,
+        "createdAt": "2021-03-11T07:58:45.089Z",
+        "updatedAt": "2021-03-11T07:58:45.089Z",
+        "place": {
+            "id": 1,
+            "label": "Diepvries"
+        }
+    }
+]
+```
+
 #### Return codes
 
 * `200`: success
+* `400`: A bad request
+
+Errors returned when the status is `400`:
+| Code | Description |
+| --- | --- |
+| `E2-IE3` | The predefined query is not recognized.
 
 ### `POST /items`
 
@@ -306,7 +345,7 @@ is returned when an unexpected error in the procedure occurred.
 
 | Name | Type | Description |
 | --- | --- | --- |
-| `uikey` | string | if it was passed in the call |
+| `uikey` | string | if it was passed in the call
 | `labelid` | number | this is the key that can be  used for further communication.
 | `result` | string | This field equals `ok` or `error`, indicating if the creation succeeded or not.
 | `error` | Error | This is only present if the result field indicates an error.
@@ -360,6 +399,7 @@ is returned when an unexpected error in the procedure occurred.
 #### Return codes
 
 * `200`: success
+* `400`: Bad request
 
 In the error objects in the results array the following codes can occur:
 
@@ -369,12 +409,6 @@ In the error objects in the results array the following codes can occur:
 | `E1-IE2` | The label id is already in use|
 | `E1-NOTNULL` | the description was not passed or empty
 | `E1-EMPTY` | the description passed contained only white space
-
-#### Return codes
-
-* `200`: success
-* `400`:
-  * `E3-UNIQUE`: the label must be unique.
 
 ## Label Files (DEPRECATED)
 

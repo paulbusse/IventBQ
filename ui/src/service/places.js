@@ -1,6 +1,12 @@
 import ivts from '../utils/ivts';
 import { error } from '../utils/notify';
 
+function getPlaces(cbResults) {
+  ivts.get('/places')
+    .then((res) => cbResults(res.data))
+    .catch((err) => error(err.response.data));
+}
+
 function getAllPlaces(places) {
   ivts.get('/places')
     .then((res) => {
@@ -38,6 +44,7 @@ async function create(label) {
 
 export default {
   getAllPlaces,
+  getPlaces,
   getAllPlacesASync,
   create,
 };

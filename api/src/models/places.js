@@ -20,7 +20,7 @@ class Place extends Model {
   }
 
   static associate(models) {
-    Place.hasMany(models.Item);
+    Place.hasMany(models.Item, { as: 'items', foreignKey: 'placeid', targetKey: 'id' });
   }
 }
 
