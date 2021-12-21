@@ -24,7 +24,6 @@ event.on('state', (e) => {
   switch (e.event) {
     case 'new-items':
       state.items.reset();
-      state.itemDescriptions.reset();
       break;
     default:
       console.info(`state: unhandled event: ${e}`);

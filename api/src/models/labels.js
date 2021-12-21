@@ -19,7 +19,7 @@ class Label extends Model {
   }
 
   static associate(models) {
-    Label.hasOne(models.Item);
+    Label.hasOne(models.Item, { as: 'label', foreignKey: 'labelid', targetKey: 'id' });
   }
 }
 

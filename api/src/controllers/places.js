@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
-const errHandler = require('../utils/error');
+const IvtsError = require('../classes/ivtserror');
+const { errHandler, errStatus } = require('../utils/error');
 const Place = require('../models/places');
 
 exports.getAll = async function getAll(req, res) {
@@ -12,6 +13,12 @@ exports.create = function create(req, res) {
   console.log('POST /places');
 
   const { label } = req.body;
+  label.trim();
+  if (!label) {
+    const msg = new IvtsError('IE16');
+    res.status(errStatus(msg)).json(errHandler('E3', msg));
+    return;
+  }
   Place.create({ label })
     .then(() => {
       Place.findOne({ where: { label } })

@@ -1,5 +1,6 @@
 import { ref } from 'vue';
 import svcItems from '../service/items';
+import { info } from '../utils/notify';
 
 export default class Items {
   constructor() {
@@ -38,5 +39,19 @@ export default class Items {
 
   reset() {
     this.items.value = [];
+  }
+
+  doRemove(item) {
+    const idx = this.items.value.findIndex((i) => i.id === item.id);
+    this.items.value.splice(idx, 1);
+    info({
+      summary: 'Verwijderen van een artikel',
+      detail: `Het artikel "${item.description}"(${item.labelid}) is verhuisd naar de vuilbak.`,
+    });
+  }
+
+  remove(item) {
+    const cbRemove = this.doRemove.bind(this);
+    svcItems.patch(item, cbRemove);
   }
 }

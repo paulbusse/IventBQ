@@ -8,6 +8,7 @@ import Button from 'primevue/button';
 import Card from 'primevue/card';
 import Calendar from 'primevue/calendar';
 import Column from 'primevue/column';
+import ConfirmDialog from 'primevue/confirmdialog';
 import DataTable from 'primevue/datatable';
 import Dialog from 'primevue/dialog';
 import Dropdown from 'primevue/dropdown';
@@ -16,6 +17,8 @@ import InputText from 'primevue/inputtext';
 import MultiSelect from 'primevue/multiselect';
 import TabMenu from 'primevue/tabmenu';
 import Toast from 'primevue/toast';
+
+import ConfirmationService from 'primevue/confirmationservice';
 import ToastService from 'primevue/toastservice';
 
 import App from './App';
@@ -36,6 +39,7 @@ const app = createApp(App);
 app.use(VueAxios, axios);
 app.use(router);
 app.use(PrimeVue);
+app.use(ConfirmationService);
 app.use(ToastService);
 
 app.component('AutoComplete', AutoComplete);
@@ -43,6 +47,7 @@ app.component('Button', Button);
 app.component('Card', Card);
 app.component('Calendar', Calendar);
 app.component('Column', Column);
+app.component('ConfirmDialog', ConfirmDialog);
 app.component('DataTable', DataTable);
 app.component('Dialog', Dialog);
 app.component('Dropdown', Dropdown);

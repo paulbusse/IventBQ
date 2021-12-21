@@ -16,15 +16,19 @@ The code describes both the summary and the detail. The code looks like
 E<number>-<string>
 ```
 
-The number identifies the summary, the string refers to the detail.
+The number identifies the summary, the string refers to the detail. The number 0
+is reserved for system errors.
 
 There are a few generic errors that can occur with any query. These errors won't
 be repeated in the descriptions below.
 
 | Code | Description |
 | --- |  --- |
+| `E0-E15` | The request does not exist |
 | `E<n>-INTERNAL` | This is an unknown error. If this occurs, create a bug report.
 | `E<n>-DATABASE` | The database becomes unavailable. If the database is unavailable at startup, the server won't start. So this has a different reason. Contact your system administrator. Typically a table or record is locked. |
+| `E<n>-FOREIGNKEY` | The request access elements in the database that don't exist |
+| `E<n>-UNIQUE` | You are trying to create an element that already exists |
 
 The server side may discover new errors over time. If a new error is detected an
 unknown error is raised. This error can be recognized by the code: the string
@@ -214,9 +218,13 @@ Fields:
 | `quantity` | string | an indication of the quantity
 | `uikey` | string | a reference used by the UI
 | `labelid` | number | refers to the label
-| `placeid` | number | refers to the place where the item will be stored
+| `placeid` | number | refers to the place for the item
+| `place.id` | number | refers to the place for item (same as placeid)
+| `place.name` | number | label of to the place where for the item (same as placeid)
 | `createdAt` | date time | the time and date the place was created
 | `updatedAt` | date time | the time and date the place was updated
+
+`Placeid` may not be present in the returned item.
 
 ### `GET /items`
 
@@ -234,7 +242,7 @@ Valid options for the parameter p are:
 | option | description |
 | --- | --- |
 | `itemdescriptions` | this returns a list of distinct item definitions in the database. It does not take the state of the item into account.
-| `stored` | this returns a list items stored in the system.
+| `stored` | this returns a list items stored in the system not in the trashcan
 
 #### Request body
 
@@ -300,6 +308,55 @@ the following fields:
         }
     }
 ]
+```
+
+#### Return codes
+
+* `200`: success
+* `400`: A bad request
+
+Errors returned when the status is `400`:
+| Code | Description |
+| --- | --- |
+| `E2-IE3` | The predefined query is not recognized.
+
+### `GET /items/:id`
+
+This REST call will return a single item with the given internal identifier, if it exists.
+
+#### Parameters
+
+| parameter | mandatory | description |
+| --- | --- | --- |
+| `id` | Y | a predefined filter. See below for more detail
+
+#### Request body
+
+* N/A
+
+#### Response body
+
+The item
+
+##### Example
+
+
+##### Example
+
+```json
+{
+    "id": 1,
+    "description": "courgettesoep",
+    "quantity": "2p",
+    "uikey": "a",
+    "labelid": 51,
+    "createdAt": "2021-03-11T07:40:54.112Z",
+    "updatedAt": "2021-03-11T07:40:54.112Z",
+    "place": {
+        "id": 1,
+        "label": "Diepvries"
+    }
+}
 ```
 
 #### Return codes
@@ -409,6 +466,107 @@ In the error objects in the results array the following codes can occur:
 | `E1-IE2` | The label id is already in use|
 | `E1-NOTNULL` | the description was not passed or empty
 | `E1-EMPTY` | the description passed contained only white space
+
+### PATCH /items/:id
+
+#### Parameters
+
+* `id`: the internal id of the item.
+
+The internal `id` should not be confused with the `labelid`. Both are
+identifying attributes but the user should never see the `id`.
+
+#### Request body
+
+The request contains a single object. The fields are
+
+| Name | Type | Mandatory | Comment |
+| --- | --- | --- | --- |
+| `ìd` | number | N | This must be the same as the parameter
+| `description` | string | N | Modifies the database field
+| `quantity` | string | N | Modifies the database field
+| `uikey` | string | N | Modifies the database field
+| `labelid` | number | N | Must be the same as the one in the database
+| `place.id` | number | N | Modifies the database field `placeid`
+| `updatedAt` | date time | Y | Must be the same as the database field
+| `op` | string | N | Other elements in the backend can be changed through this parameter.
+
+Other fields may be passed but they are ignored.
+
+The field `op` can have the following values:
+
+| Name | Comment |
+| --- | --- |
+| `destroy` | The item is moved to the trash can
+| `restore` | The item is restored from the trash can
+
+#### Response body
+
+The response body always contains a message and sometimes the item. The message
+takes the form of an error message as described above.
+
+The table below shows the different messages, the corresponding
+HTTP error code, whether the item is returned and a description.
+
+| Code | HTTP | Item | Description
+| --- | --- | --- | --- |
+| `E4-IE4` | 400 | N | There is no item with the given parameter
+| `E4-IE5` | 409 | Y | The `updateAt` in the request body and in the database do not match.
+| `E4-IE6` | 400 | Y | Information in the database does not match with the request body
+| `E4-IE7` | 400 | Y | There is no `updatedAt` field in the request body
+| `E4-IE8` | 200 | Y | The changes were successful
+| `E4-IE9` | 200 | N | The item was successfully moved to the thrash
+| `E4-IE10` | 200 | Y | The item was successfully restored from the thrash
+| `E4-IE11` | 400 | N | The `op` field was invalid
+| `E4-IE12` | 400 | Y | The item was already in the trashcan
+| `E4-IE13` | 400 | Y | The item was not in trashcan
+
+If the item is not returned, the result takes the format of an error message.
+
+##### Example
+
+```json
+{
+    "code": "E4-IE4",
+    "detail": "Het artikel kon niet gevonden worden.",
+    "summary": "Wijzigen van artikelen"
+}
+```
+
+If the item is returned, the message and item are returned as a separate block.
+The item may sometimes contain useless fields like `placeid` or `deleteAt`. These
+can be safely ignored.
+##### Example
+
+```json
+{
+    "message": {
+        "code": "E4-IE8",
+        "detail": "Het artikel werd succesvol gewijzigd",
+        "summary": "Wijzigen van artikelen"
+    },
+    "item": {
+        "id": 2,
+        "description": "Chili sin carne",
+        "quantity": "3p",
+        "uikey": "kn4mc4q2",
+        "labelid": 13,
+        "deletedAt": null,
+        "createdAt": "2021-04-05T13:18:52.834Z",
+        "updatedAt": "2021-04-15T07:16:17.542Z",
+        "place": {
+            "id": 1,
+            "label": "Diepvries"
+        }
+    }
+}
+```
+
+#### Return codes
+
+* `200`: success
+* `400`: Bad request
+* `409`: Conflict
 
 ## Label Files (DEPRECATED)
 

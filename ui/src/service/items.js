@@ -53,8 +53,15 @@ function create(items, cbResults) {
     });
 }
 
+function patch(item, cbResult) {
+  ivts.patch(`/items/${item.id}`, item)
+    .then((res) => cbResult(res.data))
+    .catch((err) => err.response.data);
+}
+
 export default {
   create,
   getDescriptions,
   getStored,
+  patch,
 };

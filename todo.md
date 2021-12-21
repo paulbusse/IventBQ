@@ -2,19 +2,24 @@
 
 ## Current
 
-### ItemView: basic list
+### Edit and delete items
 
-- [x] add the itemview view basic table
-- [x] define GET stored items (Frontend)
-- [x] define GET stored items (Backend)
-- [x] Added query to retrieve stored items
-- [x] call GET stored items (Frontend)
-- [x] show results
+- [ ] Edit dialog
+- [ ] Edit call
+- [x] Delete dialog (class)
+- [x] Delete call (class)
+- [x] stored query must now also check that 'deletedAt' is null
+- [x] PATCH item service call
+- [x] update database query
+- [ ] PATCH items endpoint
+
+### Other functions
+
+- [x] Generic 404 page from API
 
 ### Bugs
 
-- [x] When new items are created the items list must be invalidated
-- [x] Place is not stored when a new item is created
+- [x] Itemdescriptions do not need to be reset
 
 ### Refactor
 
@@ -26,10 +31,19 @@
 
 ### more stuff for this screen
 
-- [ ] PUT /items
+- [ ] PATCH /items
 - [ ] DELETE /items
 
 ## Merge
+
+### ItemView: basic list
+
+- [x] add the itemview view basic table
+- [x] define GET stored items (Frontend)
+- [x] define GET stored items (Backend)
+- [x] Added query to retrieve stored items
+- [x] call GET stored items (Frontend)
+- [x] show results
 
 ### Refactored
 
@@ -37,7 +51,8 @@ N/A
 
 ### Bugs
 
-N/A
+- [x] When new items are created the items list must be invalidated
+- [x] Place is not stored when a new item is created
 
 ### Other
 

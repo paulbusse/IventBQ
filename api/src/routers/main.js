@@ -17,5 +17,8 @@ router.post('/places', placesController.create);
 // Items
 router.post('/items', itemsController.create);
 router.get('/items', itemsController.find);
+router.get('/items/:id', itemsController.find);
+router.patch('/items/:itemid', itemsController.patch);
+router.post('/items/:itemid/actions', itemsController.act);
 
 module.exports = router;
